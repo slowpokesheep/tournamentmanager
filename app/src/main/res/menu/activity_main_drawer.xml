@@ -12,5 +12,9 @@
             android:id="@+id/nav_dashboard"
             android:icon="@drawable/ic_dashboard_black_24dp"
             android:title="@string/menu_dashboard" />
+        <item
+            android:id="@+id/nav_profile"
+            android:icon="@drawable/ic_dashboard_black_24dp"
+            android:title="@string/menu_profile" />
     </group>
 </menu>

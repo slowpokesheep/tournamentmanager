@@ -13,11 +13,13 @@ import androidx.navigation.Navigation;
 import androidx.navigation.ui.AppBarConfiguration;
 import androidx.navigation.ui.NavigationUI;
 
-public class MainActivity extends AppCompatActivity {//implements NavigationView.OnNavigationItemSelectedListener {
+public class MainActivity extends AppCompatActivity {
 
     private AppBarConfiguration mAppBarConfiguration;
 
     private DrawerLayout mDrawerLayout;
+
+    private NavController navController;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -37,18 +39,19 @@ public class MainActivity extends AppCompatActivity {//implements NavigationView
         NavigationView navDrawView = findViewById(R.id.nav_draw_view);
 
         // Passing each menu ID as a set of Ids because each menu should be considered as top level destinations.
-        mAppBarConfiguration = new AppBarConfiguration.Builder(R.id.nav_home, R.id.nav_dashboard, R.id.nav_notifications).setDrawerLayout(mDrawerLayout).build();
+        mAppBarConfiguration = new AppBarConfiguration.Builder(R.id.nav_home, R.id.nav_dashboard, R.id.nav_notifications, R.id.nav_profile).setDrawerLayout(mDrawerLayout).build();
 
         // Init nav controller
-        NavController navController = Navigation.findNavController(this, R.id.nav_host_fragment);
+        navController = Navigation.findNavController(this, R.id.nav_host_fragment);
         NavigationUI.setupActionBarWithNavController(this, navController, mAppBarConfiguration);
         NavigationUI.setupWithNavController(navDrawView, navController);
         NavigationUI.setupWithNavController(navView, navController);
     }
 
-    // Handle back, closes navigation drawer or goes to home screen
+    // Handle back button
     @Override
     public void onBackPressed() {
+        // Close the navigation drawer if it's open
         if (mDrawerLayout.isDrawerOpen(GravityCompat.START)) {
             mDrawerLayout.closeDrawer(GravityCompat.START);
         } else {
@@ -60,6 +63,6 @@ public class MainActivity extends AppCompatActivity {//implements NavigationView
     @Override
     public boolean onSupportNavigateUp() {
         NavController navController = Navigation.findNavController(this, R.id.nav_host_fragment);
-        return NavigationUI.navigateUp(navController, mAppBarConfiguration) || super.onSupportNavigateUp();
+        return NavigationUI.navigateUp(navController, mAppBarConfiguration);// || super.onSupportNavigateUp();
     }
 }

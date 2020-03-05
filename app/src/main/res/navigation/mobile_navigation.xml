@@ -22,4 +22,11 @@
         android:name="is.hi.tournamentmanager.ui.notifications.NotificationsFragment"
         android:label="@string/menu_notifications"
         tools:layout="@layout/fragment_notifications" />
+
+    <fragment
+        android:id="@+id/nav_profile"
+        android:name="is.hi.tournamentmanager.collections.CollectionProfileFragment"
+        android:label="@string/menu_profile"
+        tools:layout="@layout/fragment_collection_profile" />
+
 </navigation>
