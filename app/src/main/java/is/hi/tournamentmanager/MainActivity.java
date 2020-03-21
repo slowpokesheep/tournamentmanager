@@ -1,6 +1,7 @@
 package is.hi.tournamentmanager;
 
 import android.os.Bundle;
+
 import com.google.android.material.bottomnavigation.BottomNavigationView;
 import com.google.android.material.navigation.NavigationView;
 
@@ -13,12 +14,12 @@ import androidx.navigation.Navigation;
 import androidx.navigation.ui.AppBarConfiguration;
 import androidx.navigation.ui.NavigationUI;
 
+import is.hi.tournamentmanager.api.ApolloConnector;
+
 public class MainActivity extends AppCompatActivity {
 
     private AppBarConfiguration mAppBarConfiguration;
-
     private DrawerLayout mDrawerLayout;
-
     private NavController navController;
 
     @Override
@@ -46,6 +47,9 @@ public class MainActivity extends AppCompatActivity {
         NavigationUI.setupActionBarWithNavController(this, navController, mAppBarConfiguration);
         NavigationUI.setupWithNavController(navDrawView, navController);
         NavigationUI.setupWithNavController(navView, navController);
+
+        // Init apollo client
+        ApolloConnector.setupApollo();
     }
 
     // Handle back button
@@ -65,4 +69,5 @@ public class MainActivity extends AppCompatActivity {
         NavController navController = Navigation.findNavController(this, R.id.nav_host_fragment);
         return NavigationUI.navigateUp(navController, mAppBarConfiguration);// || super.onSupportNavigateUp();
     }
+
 }

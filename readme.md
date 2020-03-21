@@ -70,3 +70,7 @@ app:navGraph="@navigation/mobile_navigation"
 * `dimens.xml` Decleration of all dimensions
 * `strings.xml` Decleration of all strings
 * `styles.xml` Decleration of all styles
+
+## Apollo GraphQL
+
+* ./gradlew generateApolloSources
