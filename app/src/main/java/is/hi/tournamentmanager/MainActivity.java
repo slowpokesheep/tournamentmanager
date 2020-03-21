@@ -51,7 +51,7 @@ public class MainActivity extends AppCompatActivity {
         NavigationUI.setupWithNavController(navView, navController);
 
         // Init apollo client
-        ApolloConnector.setupApollo();
+        ApolloConnector.getInstance().setupApollo();
     }
 
     // Handle back button

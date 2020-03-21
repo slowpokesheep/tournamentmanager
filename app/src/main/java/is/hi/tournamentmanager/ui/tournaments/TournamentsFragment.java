@@ -25,7 +25,6 @@ import com.apollographql.apollo.tournament.TournamentsQuery;
 
 import org.jetbrains.annotations.NotNull;
 
-import java.util.ArrayList;
 import java.util.List;
 
 import is.hi.tournamentmanager.R;
@@ -37,9 +36,7 @@ public class TournamentsFragment extends Fragment {
     private RecyclerView recyclerView;
 
     private TournamentListAdapter adapter = new TournamentListAdapter();
-    Handler uiHandler = new Handler(Looper.getMainLooper());
-
-    private final String STATE_LIST = "Tournament List Adapter Data";
+    private Handler uiHandler = new Handler(Looper.getMainLooper());
 
     public View onCreateView(@NonNull LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
 
@@ -65,20 +62,14 @@ public class TournamentsFragment extends Fragment {
         return root;
     }
 
-    @Override
-    public void onSaveInstanceState(Bundle outState) {
-        Log.d("Tournament", "saving state...");
-        super.onSaveInstanceState(outState);
-        outState.putParcelableArrayList(STATE_LIST, (ArrayList) adapter.getData());
-    }
-
     public void getTournaments(int first) {
-        ApolloConnector.getApolloClient().query(
-            TournamentsQuery
-                    .builder()
-                    .first(first)
-                    .build())
+        TournamentsQuery query = TournamentsQuery
+                .builder()
+                .first(first)
+                .build();
+        ApolloConnector.getInstance().getApolloClient().query(query)
             .enqueue(new ApolloCallback<>(new ApolloCall.Callback<TournamentsQuery.Data>() {
+
                 @Override
                 public void onResponse(@NotNull Response<TournamentsQuery.Data> response) {
                     // Log.d("Tournament", "Response: " + response.data());
@@ -90,6 +81,7 @@ public class TournamentsFragment extends Fragment {
                 public void onFailure(@NotNull ApolloException e) {
                     Log.d("Tournament", "Exception " + e.getMessage(), e);
                 }
+
             }, uiHandler));
     }
 }
