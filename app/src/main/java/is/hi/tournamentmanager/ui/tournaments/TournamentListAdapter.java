@@ -1,4 +1,4 @@
-package is.hi.tournamentmanager.ui.home;
+package is.hi.tournamentmanager.ui.tournaments;
 
 import android.view.LayoutInflater;
 import android.view.View;
@@ -9,15 +9,12 @@ import androidx.recyclerview.widget.RecyclerView;
 
 import com.apollographql.apollo.tournament.TournamentsQuery;
 
-import java.util.Collections;
 import java.util.List;
 
 import is.hi.tournamentmanager.R;
+import is.hi.tournamentmanager.utils.ApiData;
 
 class TournamentListAdapter extends RecyclerView.Adapter<TournamentListAdapter.TournamentListViewHolder> {
-    private List<TournamentsQuery.Edge> data = Collections.emptyList();
-
-
     public static class TournamentListViewHolder extends RecyclerView.ViewHolder {
         public TextView codeView;
         public TextView categoryView;
@@ -33,8 +30,12 @@ class TournamentListAdapter extends RecyclerView.Adapter<TournamentListAdapter.T
     TournamentListAdapter() { }
 
     public void setData(List<TournamentsQuery.Edge> d) {
-        this.data = d;
-        //this.notifyDataSetChanged();
+        ApiData.getInstance().setTournamentsData(d);
+        this.notifyDataSetChanged();
+    }
+
+    public List<TournamentsQuery.Edge> getData() {
+        return ApiData.getInstance().getTournamentsData();
     }
 
     // Create new views (invoked by the layout manager)
@@ -50,7 +51,7 @@ class TournamentListAdapter extends RecyclerView.Adapter<TournamentListAdapter.T
     // Replace the contents of a view (invoked by the layout manager)
     @Override
     public void onBindViewHolder(TournamentListViewHolder holder, int position) {
-        TournamentsQuery.Node node = data.get(position).node();
+        TournamentsQuery.Node node = getData().get(position).node();
         holder.codeView.setText(node.code());
         holder.categoryView.setText(node.category().name());
         holder.nameView.setText(node.name());
@@ -58,6 +59,6 @@ class TournamentListAdapter extends RecyclerView.Adapter<TournamentListAdapter.T
 
     @Override
     public int getItemCount() {
-        return data.size();
+        return getData().size();
     }
 }
