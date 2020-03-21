@@ -1,6 +1,8 @@
 package is.hi.tournamentmanager;
 
 import android.os.Bundle;
+import android.util.Log;
+
 import com.google.android.material.bottomnavigation.BottomNavigationView;
 import com.google.android.material.navigation.NavigationView;
 
@@ -13,16 +15,17 @@ import androidx.navigation.Navigation;
 import androidx.navigation.ui.AppBarConfiguration;
 import androidx.navigation.ui.NavigationUI;
 
+import is.hi.tournamentmanager.utils.ApolloConnector;
+
 public class MainActivity extends AppCompatActivity {
 
     private AppBarConfiguration mAppBarConfiguration;
-
     private DrawerLayout mDrawerLayout;
-
     private NavController navController;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
+        Log.d("Main activity", "onCreate");
         super.onCreate(savedInstanceState);
 
         setContentView(R.layout.activity_main);
@@ -39,13 +42,16 @@ public class MainActivity extends AppCompatActivity {
         NavigationView navDrawView = findViewById(R.id.nav_draw_view);
 
         // Passing each menu ID as a set of Ids because each menu should be considered as top level destinations.
-        mAppBarConfiguration = new AppBarConfiguration.Builder(R.id.nav_home, R.id.nav_dashboard, R.id.nav_notifications, R.id.nav_profile).setDrawerLayout(mDrawerLayout).build();
+        mAppBarConfiguration = new AppBarConfiguration.Builder(R.id.nav_home, R.id.nav_tournaments, R.id.nav_dashboard, R.id.nav_notifications, R.id.nav_profile).setDrawerLayout(mDrawerLayout).build();
 
         // Init nav controller
         navController = Navigation.findNavController(this, R.id.nav_host_fragment);
         NavigationUI.setupActionBarWithNavController(this, navController, mAppBarConfiguration);
         NavigationUI.setupWithNavController(navDrawView, navController);
         NavigationUI.setupWithNavController(navView, navController);
+
+        // Init apollo client
+        ApolloConnector.setupApollo();
     }
 
     // Handle back button
@@ -65,4 +71,5 @@ public class MainActivity extends AppCompatActivity {
         NavController navController = Navigation.findNavController(this, R.id.nav_host_fragment);
         return NavigationUI.navigateUp(navController, mAppBarConfiguration);// || super.onSupportNavigateUp();
     }
+
 }

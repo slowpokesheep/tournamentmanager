@@ -9,6 +9,10 @@
             android:icon="@drawable/ic_account_circle_black_24dp"
             android:title="@string/menu_home" />
         <item
+            android:id="@+id/nav_tournaments"
+            android:icon="@drawable/ic_account_circle_black_24dp"
+            android:title="@string/menu_tournaments" />
+        <item
             android:id="@+id/nav_dashboard"
             android:icon="@drawable/ic_dashboard_black_24dp"
             android:title="@string/menu_dashboard" />

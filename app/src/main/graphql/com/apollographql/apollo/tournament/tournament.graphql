@@ -1,0 +1,48 @@
+query Tournaments(
+    $first: Int
+    $after: String
+    $superCategory: Float
+    $name: String
+    $statuses: String
+    $categories: String
+    $creator: Float
+    $registeredIn: Float
+  ) {
+    tournaments(
+      first: $first
+      after: $after
+      superCategory: $superCategory
+      name_Icontains: $name
+      status_In: $statuses
+      category_Name_In: $categories
+      creator: $creator
+      registeredIn: $registeredIn
+    ) {
+      pageInfo {
+        endCursor
+      }
+      totalCount
+      edges {
+        node {
+          id
+          category {
+            id
+            name
+          }
+          code
+          creator {
+            id
+            username
+          }
+          name
+          private
+          registeredUsers {
+            totalCount
+          }
+          slots
+          status
+          statusDisplay
+        }
+      }
+    }
+  }
