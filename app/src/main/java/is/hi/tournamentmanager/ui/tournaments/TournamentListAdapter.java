@@ -9,6 +9,7 @@ import androidx.recyclerview.widget.RecyclerView;
 
 import com.apollographql.apollo.tournament.TournamentsQuery;
 
+import java.util.Collections;
 import java.util.List;
 
 import is.hi.tournamentmanager.R;
@@ -27,15 +28,19 @@ class TournamentListAdapter extends RecyclerView.Adapter<TournamentListAdapter.T
         }
     }
 
+    private List<TournamentsQuery.Edge> data = Collections.emptyList();
+
     TournamentListAdapter() { }
 
     public void setData(List<TournamentsQuery.Edge> d) {
-        ApiData.getInstance().setTournamentsData(d);
+        // ApiData.getInstance().setTournamentsData(d);
+        data = d;
         this.notifyDataSetChanged();
     }
 
     public List<TournamentsQuery.Edge> getData() {
-        return ApiData.getInstance().getTournamentsData();
+        // return ApiData.getInstance().getTournamentsData();
+        return data;
     }
 
     // Create new views (invoked by the layout manager)

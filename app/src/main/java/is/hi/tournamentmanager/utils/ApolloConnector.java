@@ -1,5 +1,7 @@
 package is.hi.tournamentmanager.utils;
 
+import android.app.Application;
+import android.content.SharedPreferences;
 import android.util.Log;
 
 import com.apollographql.apollo.ApolloClient;
@@ -10,6 +12,8 @@ import com.apollographql.apollo.cache.normalized.CacheKeyResolver;
 import com.apollographql.apollo.cache.normalized.NormalizedCacheFactory;
 import com.apollographql.apollo.cache.normalized.lru.EvictionPolicy;
 import com.apollographql.apollo.cache.normalized.lru.LruNormalizedCacheFactory;
+import com.apollographql.apollo.cache.normalized.sql.ApolloSqlHelper;
+import com.apollographql.apollo.cache.normalized.sql.SqlNormalizedCacheFactory;
 
 import org.jetbrains.annotations.NotNull;
 
@@ -32,7 +36,9 @@ public class ApolloConnector {
     private final String BASE_URL = "https://tmmanagerbackend.herokuapp.com/";
     private ApolloClient apolloClient;
 
-    public ApolloClient setupApollo() {
+    public ApolloClient setupApollo(Application app) {
+        ApolloSqlHelper apolloSqlHelper = ApolloSqlHelper.create(app.getApplicationContext());
+        NormalizedCacheFactory cacheFactory = new SqlNormalizedCacheFactory(apolloSqlHelper);
         // Create the cache key resolver, this example works well when all types have globally unique ids.
         CacheKeyResolver resolver =  new CacheKeyResolver() {
             @NotNull @Override
@@ -54,17 +60,20 @@ public class ApolloConnector {
             }
         };
 
-        NormalizedCacheFactory cacheFactory = new LruNormalizedCacheFactory(EvictionPolicy.builder().maxSizeBytes(10 * 1024).build());
+        SharedPreferences pref = app.getSharedPreferences("MyPref", 0);
+
         OkHttpClient okHttpClient = new OkHttpClient.Builder()
-                /*
                 .addInterceptor(chain -> {
                     Request original = chain.request();
                     Request.Builder builder = original.newBuilder().method(original.method(), original.body());
-                    builder.header("Authorization", "JWT " + "eyJ0eXAiOiJKV1QiLCJhbGciOiJIUzI1NiJ9.eyJ1c2VybmFtZSI6ImhyYXBwdXIyIiwiZXhwIjoxNTg0ODAzMjYwLCJvcmlnSWF0IjoxNTg0ODAyOTYwfQ.kUWGtCC-j9vLpBR0jj4niN3ZnnbZDFuFlHy7bIw0x-g");
-                    Log.d("auth token", "asd");
+                    // check for auth token
+                    String token = SharedPref.getInstance().getToken();
+                    if (token != null) {
+                        Log.d("auth token", token);
+                        builder.header("Authorization", "JWT " + token);
+                    }
                     return chain.proceed(builder.build());
                 })
-                */
                 .build();
         apolloClient = ApolloClient.builder()
                 .serverUrl(BASE_URL)

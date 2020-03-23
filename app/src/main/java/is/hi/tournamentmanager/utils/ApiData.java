@@ -5,7 +5,6 @@ import com.apollographql.apollo.tournament.TournamentsQuery;
 import java.util.Collections;
 import java.util.List;
 
-// singleton class responsible for 'caching' data from the API.
 public class ApiData {
     public static ApiData apiData = null;
 

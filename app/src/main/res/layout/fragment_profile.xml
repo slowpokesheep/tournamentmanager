@@ -20,6 +20,4 @@
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toTopOf="parent" />
 
-    <include layout="@layout/login_form" android:id="@+id/profile_login" />
-
 </androidx.constraintlayout.widget.ConstraintLayout>

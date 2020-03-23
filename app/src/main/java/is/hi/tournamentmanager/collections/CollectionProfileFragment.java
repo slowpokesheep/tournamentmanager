@@ -1,6 +1,7 @@
 package is.hi.tournamentmanager.collections;
 
 import android.os.Bundle;
+import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -8,6 +9,10 @@ import android.view.ViewGroup;
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
 import androidx.fragment.app.Fragment;
+import androidx.lifecycle.Observer;
+import androidx.lifecycle.ViewModelProvider;
+import androidx.navigation.NavController;
+import androidx.navigation.Navigation;
 import androidx.viewpager2.widget.ViewPager2;
 
 import com.google.android.material.tabs.TabLayout;
@@ -16,14 +21,15 @@ import com.google.android.material.tabs.TabLayoutMediator;
 import is.hi.tournamentmanager.R;
 import is.hi.tournamentmanager.ui.dashboard.DashboardFragment;
 import is.hi.tournamentmanager.ui.notifications.NotificationsFragment;
+import is.hi.tournamentmanager.ui.authentication.LoginViewModel;
 import is.hi.tournamentmanager.ui.profile.ProfileFragment;
-import is.hi.tournamentmanager.ui.profile.ProfileViewModel;
 import is.hi.tournamentmanager.utils.ObjectCollectionAdapter;
 
 public class CollectionProfileFragment extends Fragment {
 
-    ViewPager2 viewPager;
-    ObjectCollectionAdapter profileCollectionAdapter;
+    private ViewPager2 viewPager;
+    private ObjectCollectionAdapter profileCollectionAdapter;
+    private LoginViewModel loginViewModel;
 
     // Load
     public View onCreateView(@NonNull LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
@@ -33,6 +39,31 @@ public class CollectionProfileFragment extends Fragment {
     // After onCreateView
     @Override
     public void onViewCreated(@NonNull View view, @Nullable Bundle savedInstanceState) {
+        super.onViewCreated(view, savedInstanceState);
+
+        // First we check authentication
+        loginViewModel = new ViewModelProvider(requireActivity()).get(LoginViewModel.class);
+
+        final NavController navController = Navigation.findNavController(view);
+        loginViewModel.authenticationState.observe(getViewLifecycleOwner(),
+            new Observer<LoginViewModel.AuthenticationState>() {
+                @Override
+                public void onChanged(LoginViewModel.AuthenticationState authenticationState) {
+                    switch (authenticationState) {
+                        case AUTHENTICATED:
+                            Log.d("CollectionFragment", "AUTHENTICATED");
+                            authenticated(view);
+                            break;
+                        case UNAUTHENTICATED:
+                            Log.d("CollectionFragment", "UNAUTHENTICATED");
+                            navController.navigate(R.id.nav_login);
+                            break;
+                    }
+                }
+            });
+    }
+
+    public void authenticated(View view) {
         profileCollectionAdapter = new ObjectCollectionAdapter(this);
 
         // Add fragments to the adapter
@@ -47,11 +78,11 @@ public class CollectionProfileFragment extends Fragment {
         // Link tab layout to viewpager
         TabLayout tabLayout = view.findViewById(R.id.tab_layout);
         new TabLayoutMediator(tabLayout, viewPager,
-                new TabLayoutMediator.TabConfigurationStrategy() {
-                    @Override
-                    public void onConfigureTab(@NonNull TabLayout.Tab tab, int position) {
-                        tab.setText(profileCollectionAdapter.getTitle(position));
-                    }
-                }).attach();
+            new TabLayoutMediator.TabConfigurationStrategy() {
+                @Override
+                public void onConfigureTab(@NonNull TabLayout.Tab tab, int position) {
+                    tab.setText(profileCollectionAdapter.getTitle(position));
+                }
+            }).attach();
     }
 }

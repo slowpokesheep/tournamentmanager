@@ -14,7 +14,7 @@
     <fragment
         android:id="@+id/nav_tournaments"
         android:name="is.hi.tournamentmanager.ui.tournaments.TournamentsFragment"
-        android:label="@string/menu_home"
+        android:label="@string/menu_tournaments"
         tools:layout="@layout/fragment_tournaments" />
 
     <fragment
@@ -34,5 +34,11 @@
         android:name="is.hi.tournamentmanager.collections.CollectionProfileFragment"
         android:label="@string/menu_profile"
         tools:layout="@layout/fragment_collection_profile" />
+
+    <fragment
+        android:id="@+id/nav_login"
+        android:name="is.hi.tournamentmanager.ui.authentication.LoginFragment"
+        android:label="@string/menu_login"
+        tools:layout="@layout/fragment_login" />
 
 </navigation>

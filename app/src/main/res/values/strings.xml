@@ -15,6 +15,6 @@
     <string name="menu_profile">Profile</string>
     <string name="menu_dashboard">Dashboard</string>
     <string name="menu_notifications">Notifications</string>
+    <string name="menu_login">Login</string>
 
-    <string name="login">Login</string>
 </resources>

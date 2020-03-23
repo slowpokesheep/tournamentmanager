@@ -25,10 +25,12 @@ import com.apollographql.apollo.tournament.TournamentsQuery;
 
 import org.jetbrains.annotations.NotNull;
 
+import java.util.Collections;
 import java.util.List;
 
 import is.hi.tournamentmanager.R;
 import is.hi.tournamentmanager.utils.ApolloConnector;
+import is.hi.tournamentmanager.utils.SharedPref;
 
 public class TournamentsFragment extends Fragment {
 
@@ -42,7 +44,6 @@ public class TournamentsFragment extends Fragment {
 
         tournamentsViewModel = new ViewModelProvider(this).get(TournamentsViewModel.class);
         View root = inflater.inflate(R.layout.fragment_tournaments, container, false);
-        final TextView textView = root.findViewById(R.id.text_tournaments);
 
         recyclerView = root.findViewById(R.id.tournament_list);
         LinearLayoutManager layoutManager = new LinearLayoutManager(getContext());
@@ -50,31 +51,30 @@ public class TournamentsFragment extends Fragment {
         getTournaments(20);
         recyclerView.setAdapter(adapter);
 
-        /*
-        tournamentsViewModel.getText().observe(getViewLifecycleOwner(), new Observer<String>() {
-            @Override
-            public void onChanged(@Nullable String s) {
-                textView.setText(s);
-            }
-        });
-        */
-
         return root;
     }
 
     public void getTournaments(int first) {
         TournamentsQuery query = TournamentsQuery
-                .builder()
-                .first(first)
-                .build();
+            .builder()
+            .first(first)
+            .build();
         ApolloConnector.getInstance().getApolloClient().query(query)
             .enqueue(new ApolloCallback<>(new ApolloCall.Callback<TournamentsQuery.Data>() {
 
                 @Override
                 public void onResponse(@NotNull Response<TournamentsQuery.Data> response) {
-                    // Log.d("Tournament", "Response: " + response.data());
-                    List<TournamentsQuery.Edge> edges = response.data().tournaments().edges();
-                    adapter.setData(edges);
+                    Log.d("Tournament", "Response: " + response.data());
+                    TournamentsQuery.Data data = response.data();
+                    // if data is null it is most likely because our token is expired/invalid
+                    if (data == null || data.tournaments() == null) {
+                        SharedPref.getInstance().clearToken();
+                        // TODO: display error message
+                        adapter.setData(Collections.emptyList());
+                    } else {
+                        List<TournamentsQuery.Edge> edges = response.data().tournaments().edges();
+                        adapter.setData(edges);
+                    }
                 }
 
                 @Override

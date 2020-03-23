@@ -16,6 +16,7 @@ import androidx.navigation.ui.AppBarConfiguration;
 import androidx.navigation.ui.NavigationUI;
 
 import is.hi.tournamentmanager.utils.ApolloConnector;
+import is.hi.tournamentmanager.utils.SharedPref;
 
 public class MainActivity extends AppCompatActivity {
 
@@ -42,7 +43,8 @@ public class MainActivity extends AppCompatActivity {
         NavigationView navDrawView = findViewById(R.id.nav_draw_view);
 
         // Passing each menu ID as a set of Ids because each menu should be considered as top level destinations.
-        mAppBarConfiguration = new AppBarConfiguration.Builder(R.id.nav_home, R.id.nav_tournaments, R.id.nav_dashboard, R.id.nav_notifications, R.id.nav_profile).setDrawerLayout(mDrawerLayout).build();
+        mAppBarConfiguration = new AppBarConfiguration.Builder(R.id.nav_home, R.id.nav_tournaments, R.id.nav_dashboard,
+                R.id.nav_notifications, R.id.nav_profile, R.id.nav_login).setDrawerLayout(mDrawerLayout).build();
 
         // Init nav controller
         navController = Navigation.findNavController(this, R.id.nav_host_fragment);
@@ -51,7 +53,9 @@ public class MainActivity extends AppCompatActivity {
         NavigationUI.setupWithNavController(navView, navController);
 
         // Init apollo client
-        ApolloConnector.getInstance().setupApollo();
+        ApolloConnector.getInstance().setupApollo(getApplication());
+        // Init shared preferences
+        SharedPref.init(getApplication());
     }
 
     // Handle back button
