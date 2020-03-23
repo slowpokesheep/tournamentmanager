@@ -24,6 +24,7 @@ import is.hi.tournamentmanager.ui.notifications.NotificationsFragment;
 import is.hi.tournamentmanager.ui.authentication.LoginViewModel;
 import is.hi.tournamentmanager.ui.profile.ProfileFragment;
 import is.hi.tournamentmanager.utils.ObjectCollectionAdapter;
+import is.hi.tournamentmanager.utils.SharedPref;
 
 public class CollectionProfileFragment extends Fragment {
 
@@ -42,25 +43,32 @@ public class CollectionProfileFragment extends Fragment {
         super.onViewCreated(view, savedInstanceState);
 
         // First we check authentication
-        loginViewModel = new ViewModelProvider(requireActivity()).get(LoginViewModel.class);
 
-        final NavController navController = Navigation.findNavController(view);
-        loginViewModel.authenticationState.observe(getViewLifecycleOwner(),
-            new Observer<LoginViewModel.AuthenticationState>() {
-                @Override
-                public void onChanged(LoginViewModel.AuthenticationState authenticationState) {
-                    switch (authenticationState) {
-                        case AUTHENTICATED:
-                            Log.d("CollectionFragment", "AUTHENTICATED");
-                            authenticated(view);
-                            break;
-                        case UNAUTHENTICATED:
-                            Log.d("CollectionFragment", "UNAUTHENTICATED");
-                            navController.navigate(R.id.nav_login);
-                            break;
-                    }
-                }
-            });
+        String token = SharedPref.getInstance().getToken();
+
+        // Token is null => log in required
+        if (token == null) {
+            loginViewModel = new ViewModelProvider(requireActivity()).get(LoginViewModel.class);
+
+            final NavController navController = Navigation.findNavController(view);
+            loginViewModel.getAuthenticationState().observe(getViewLifecycleOwner(),
+                    authenticationState -> {
+                        switch (authenticationState) {
+                            case AUTHENTICATED:
+                                Log.d("CollectionFragment", "AUTHENTICATED");
+                                authenticated(view);
+                                break;
+                            case UNAUTHENTICATED:
+                                Log.d("CollectionFragment", "UNAUTHENTICATED");
+                                navController.navigate(R.id.nav_login);
+                                break;
+                        }
+                    });
+        } else {
+            // The user has a token and can proceed, if it is invalid / expired,
+            // it will be cleared on the next query.
+            authenticated(view);
+        }
     }
 
     public void authenticated(View view) {
@@ -78,11 +86,6 @@ public class CollectionProfileFragment extends Fragment {
         // Link tab layout to viewpager
         TabLayout tabLayout = view.findViewById(R.id.tab_layout);
         new TabLayoutMediator(tabLayout, viewPager,
-            new TabLayoutMediator.TabConfigurationStrategy() {
-                @Override
-                public void onConfigureTab(@NonNull TabLayout.Tab tab, int position) {
-                    tab.setText(profileCollectionAdapter.getTitle(position));
-                }
-            }).attach();
+                (tab, position) -> tab.setText(profileCollectionAdapter.getTitle(position))).attach();
     }
 }

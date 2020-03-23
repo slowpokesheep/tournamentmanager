@@ -1,5 +1,6 @@
 package is.hi.tournamentmanager;
 
+import android.app.Dialog;
 import android.os.Bundle;
 import android.util.Log;
 
@@ -10,11 +11,14 @@ import androidx.appcompat.app.AppCompatActivity;
 import androidx.appcompat.widget.Toolbar;
 import androidx.core.view.GravityCompat;
 import androidx.drawerlayout.widget.DrawerLayout;
+import androidx.fragment.app.DialogFragment;
 import androidx.navigation.NavController;
 import androidx.navigation.Navigation;
 import androidx.navigation.ui.AppBarConfiguration;
 import androidx.navigation.ui.NavigationUI;
 
+import is.hi.tournamentmanager.service.ApiRepository;
+import is.hi.tournamentmanager.ui.errors.ErrorsDialogFragment;
 import is.hi.tournamentmanager.utils.ApolloConnector;
 import is.hi.tournamentmanager.utils.SharedPref;
 
@@ -56,6 +60,8 @@ public class MainActivity extends AppCompatActivity {
         ApolloConnector.getInstance().setupApollo(getApplication());
         // Init shared preferences
         SharedPref.init(getApplication());
+        // init Api repository
+        ApiRepository.getInstance().init(this);
     }
 
     // Handle back button
@@ -74,6 +80,11 @@ public class MainActivity extends AppCompatActivity {
     public boolean onSupportNavigateUp() {
         NavController navController = Navigation.findNavController(this, R.id.nav_host_fragment);
         return NavigationUI.navigateUp(navController, mAppBarConfiguration);// || super.onSupportNavigateUp();
+    }
+
+    public void showErrorsDialog(String[] errors) {
+        DialogFragment newFragment = ErrorsDialogFragment.newInstance(errors);
+        newFragment.show(getSupportFragmentManager(), "Errors Dialog");
     }
 
 }

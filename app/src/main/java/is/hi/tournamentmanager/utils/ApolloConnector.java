@@ -60,8 +60,6 @@ public class ApolloConnector {
             }
         };
 
-        SharedPreferences pref = app.getSharedPreferences("MyPref", 0);
-
         OkHttpClient okHttpClient = new OkHttpClient.Builder()
                 .addInterceptor(chain -> {
                     Request original = chain.request();

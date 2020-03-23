@@ -13,7 +13,6 @@ import java.util.Collections;
 import java.util.List;
 
 import is.hi.tournamentmanager.R;
-import is.hi.tournamentmanager.utils.ApiData;
 
 class TournamentListAdapter extends RecyclerView.Adapter<TournamentListAdapter.TournamentListViewHolder> {
     public static class TournamentListViewHolder extends RecyclerView.ViewHolder {
@@ -32,14 +31,12 @@ class TournamentListAdapter extends RecyclerView.Adapter<TournamentListAdapter.T
 
     TournamentListAdapter() { }
 
-    public void setData(List<TournamentsQuery.Edge> d) {
-        // ApiData.getInstance().setTournamentsData(d);
-        data = d;
+    public void setData(TournamentsQuery.Data d) {
+        data = d.tournaments().edges();
         this.notifyDataSetChanged();
     }
 
     public List<TournamentsQuery.Edge> getData() {
-        // return ApiData.getInstance().getTournamentsData();
         return data;
     }
 

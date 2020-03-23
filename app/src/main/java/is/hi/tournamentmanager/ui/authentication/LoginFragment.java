@@ -23,6 +23,7 @@ import is.hi.tournamentmanager.R;
 public class LoginFragment extends Fragment {
 
     private LoginViewModel viewModel;
+    private NavController navController;
 
     public View onCreateView(@NonNull LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
         Log.d("LoginFragment", "onCreateView");
@@ -37,7 +38,7 @@ public class LoginFragment extends Fragment {
         super.onViewCreated(view, savedInstanceState);
         Log.d("login", "fragment");
         viewModel = new ViewModelProvider(requireActivity()).get(LoginViewModel.class);
-        final NavController navController = Navigation.findNavController(view);
+        navController = Navigation.findNavController(view);
         final View root = view;
 
         Button loginButton = root.findViewById(R.id.login_form_submit);
@@ -63,7 +64,11 @@ public class LoginFragment extends Fragment {
         };
         requireActivity().getOnBackPressedDispatcher().addCallback(this, callback);
 
-        viewModel.authenticationState.observe(getViewLifecycleOwner(),
+        observeViewModel(root);
+    }
+
+    private void observeViewModel(View root) {
+        viewModel.getAuthenticationState().observe(getViewLifecycleOwner(),
             authenticationState -> {
                 switch (authenticationState) {
                     case AUTHENTICATED:
@@ -73,11 +78,12 @@ public class LoginFragment extends Fragment {
                     case INVALID_AUTHENTICATION:
                         Log.d("LoginFragment", "INVALID_AUTHENTICATION");
                         Snackbar.make(root,
-                            "asd",
-                            Snackbar.LENGTH_SHORT
+                                "asd",
+                                Snackbar.LENGTH_SHORT
                         ).show();
                         break;
                 }
             });
     }
+
 }
