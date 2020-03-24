@@ -55,10 +55,10 @@ public class ApiRepository {
 
     // ==== TOURNAMENTS ==== //
 
-    public void getTournaments(MutableLiveData<TournamentsQuery.Data> tournamentsData, int first) {
+    public void getTournaments(MutableLiveData<TournamentsQuery.Data> tournamentsData, int first, String after) {
         TournamentsQuery query = TournamentsQuery
             .builder()
-            .first(first)
+            .first(first).after(after)
             .build();
 
         ApolloConnector.getInstance().getApolloClient().query(query)

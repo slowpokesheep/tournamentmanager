@@ -40,4 +40,8 @@
         app:headerLayout="@layout/nav_header_main"
         app:menu="@menu/activity_main_drawer" />
 
+    <!-- Spinner -->
+    <include
+        layout="@layout/spinner" />
+
 </androidx.drawerlayout.widget.DrawerLayout>

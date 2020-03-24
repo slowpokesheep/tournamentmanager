@@ -13,10 +13,14 @@ public class TournamentsViewModel extends ViewModel {
             new MutableLiveData<>();
 
     public TournamentsViewModel() {
-        ApiRepository.getInstance().getTournaments(tournamentsDataObservable, 20);
+        fetchTournaments("");
     }
 
     public MutableLiveData<TournamentsQuery.Data> getTournamentsDataObservable() {
         return tournamentsDataObservable;
+    }
+
+    public void fetchTournaments(String endCursor) {
+        ApiRepository.getInstance().getTournaments(tournamentsDataObservable, 20, endCursor);
     }
 }

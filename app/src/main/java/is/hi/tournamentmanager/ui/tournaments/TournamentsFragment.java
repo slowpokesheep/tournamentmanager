@@ -1,6 +1,7 @@
 package is.hi.tournamentmanager.ui.tournaments;
 
 import android.os.Bundle;
+import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -20,6 +21,9 @@ public class TournamentsFragment extends Fragment {
 
     private TournamentListAdapter adapter = new TournamentListAdapter();
 
+    private String currEndCursor = "";
+    private boolean bottom = false;
+
     public View onCreateView(@NonNull LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
 
         tournamentsViewModel = new ViewModelProvider(this).get(TournamentsViewModel.class);
@@ -38,7 +42,25 @@ public class TournamentsFragment extends Fragment {
     private void observeViewModel() {
         tournamentsViewModel.getTournamentsDataObservable().observe(getViewLifecycleOwner(), tournamentsData -> {
             if (tournamentsData != null) {
-                adapter.setData(tournamentsData);
+                adapter.appendData(tournamentsData);
+                currEndCursor = tournamentsData.tournaments().pageInfo().endCursor();
+                bottom = false;
+            }
+        });
+
+        // Scroll listener so we can load more tournaments when the bottom of the list is reached
+        recyclerView.addOnScrollListener(new RecyclerView.OnScrollListener() {
+            @Override
+            public void onScrollStateChanged(@NonNull RecyclerView recyclerView, int newState) {
+                super.onScrollStateChanged(recyclerView, newState);
+                if (!recyclerView.canScrollVertically(1) && !bottom) {
+                    Log.d("Scroll Listener", "bottom reached");
+                    // We load additional data until we get a null end cursor
+                    if (currEndCursor != null) {
+                        tournamentsViewModel.fetchTournaments(currEndCursor);
+                    }
+                    bottom = true;
+                }
             }
         });
     }

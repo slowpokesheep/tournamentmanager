@@ -2,6 +2,7 @@ package is.hi.tournamentmanager;
 
 import android.os.Bundle;
 import android.util.Log;
+import android.view.View;
 
 import com.google.android.material.bottomnavigation.BottomNavigationView;
 import com.google.android.material.navigation.NavigationView;
@@ -57,7 +58,7 @@ public class MainActivity extends AppCompatActivity {
         NavigationUI.setupWithNavController(navView, navController);
 
         // Init apollo client
-        ApolloConnector.getInstance().setupApollo(getApplication());
+        ApolloConnector.getInstance().setupApollo(getApplication(), this);
         // Init shared preferences
         SharedPref.init(getApplication());
         // init Api repository
@@ -90,6 +91,14 @@ public class MainActivity extends AppCompatActivity {
     public void showSimpleDialog(String title, String message) {
         DialogFragment newFragment = SimpleMessageDialogFragment.newInstance(title, message);
         newFragment.show(getSupportFragmentManager(), "Simple Message Dialog");
+    }
+
+    public void displaySpinner() {
+        findViewById(R.id.spinner).setVisibility(View.VISIBLE);
+    }
+
+    public void hideSpinner() {
+        findViewById(R.id.spinner).setVisibility(View.GONE);
     }
 
 }
