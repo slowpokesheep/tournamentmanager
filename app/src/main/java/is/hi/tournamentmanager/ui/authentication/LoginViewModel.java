@@ -6,6 +6,7 @@ import androidx.lifecycle.AndroidViewModel;
 import androidx.lifecycle.MutableLiveData;
 
 import is.hi.tournamentmanager.service.ApiRepository;
+import is.hi.tournamentmanager.utils.SharedPref;
 
 public class LoginViewModel extends AndroidViewModel {
 
@@ -21,8 +22,12 @@ public class LoginViewModel extends AndroidViewModel {
 
     public LoginViewModel(Application application) {
         super(application);
-        // In this example, the user is always unauthenticated when MainActivity is launched
-        authenticationState.setValue(AuthenticationState.UNAUTHENTICATED);
+        String token = SharedPref.getInstance().getToken();
+        if (token == null) {
+            authenticationState.setValue(AuthenticationState.UNAUTHENTICATED);
+        } else {
+            authenticationState.setValue(AuthenticationState.AUTHENTICATED);
+        }
         username = "";
     }
 

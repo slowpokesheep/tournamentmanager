@@ -18,6 +18,18 @@
         tools:layout="@layout/fragment_tournaments" />
 
     <fragment
+        android:id="@+id/nav_collection_profile"
+        android:name="is.hi.tournamentmanager.collections.CollectionProfileFragment"
+        android:label="@string/menu_profile"
+        tools:layout="@layout/fragment_collection_profile" />
+
+    <fragment
+        android:id="@+id/nav_profile"
+        android:name="is.hi.tournamentmanager.ui.profile.ProfileFragment"
+        android:label="@string/menu_profile"
+        tools:layout="@layout/fragment_profile" />
+
+    <fragment
         android:id="@+id/nav_dashboard"
         android:name="is.hi.tournamentmanager.ui.dashboard.DashboardFragment"
         android:label="@string/menu_dashboard"
@@ -28,12 +40,6 @@
         android:name="is.hi.tournamentmanager.ui.notifications.NotificationsFragment"
         android:label="@string/menu_notifications"
         tools:layout="@layout/fragment_notifications" />
-
-    <fragment
-        android:id="@+id/nav_profile"
-        android:name="is.hi.tournamentmanager.collections.CollectionProfileFragment"
-        android:label="@string/menu_profile"
-        tools:layout="@layout/fragment_collection_profile" />
 
     <fragment
         android:id="@+id/nav_login"

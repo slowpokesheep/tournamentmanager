@@ -1,7 +1,6 @@
 package is.hi.tournamentmanager.utils;
 
 import android.app.Application;
-import android.content.SharedPreferences;
 import android.util.Log;
 
 import com.apollographql.apollo.ApolloClient;
@@ -13,7 +12,6 @@ import com.apollographql.apollo.cache.normalized.NormalizedCacheFactory;
 import com.apollographql.apollo.cache.normalized.lru.EvictionPolicy;
 import com.apollographql.apollo.cache.normalized.lru.LruNormalizedCacheFactory;
 import com.apollographql.apollo.cache.normalized.sql.ApolloSqlHelper;
-import com.apollographql.apollo.cache.normalized.sql.SqlNormalizedCacheFactory;
 
 import org.jetbrains.annotations.NotNull;
 
@@ -38,7 +36,8 @@ public class ApolloConnector {
 
     public ApolloClient setupApollo(Application app) {
         ApolloSqlHelper apolloSqlHelper = ApolloSqlHelper.create(app.getApplicationContext());
-        NormalizedCacheFactory cacheFactory = new SqlNormalizedCacheFactory(apolloSqlHelper);
+        NormalizedCacheFactory cacheFactory = new LruNormalizedCacheFactory(EvictionPolicy.builder().maxSizeBytes(10 * 1024).build());
+
         // Create the cache key resolver, this example works well when all types have globally unique ids.
         CacheKeyResolver resolver =  new CacheKeyResolver() {
             @NotNull @Override
@@ -75,7 +74,7 @@ public class ApolloConnector {
                 .build();
         apolloClient = ApolloClient.builder()
                 .serverUrl(BASE_URL)
-                .normalizedCache(cacheFactory, resolver)
+                // .normalizedCache(cacheFactory, resolver)
                 .okHttpClient(okHttpClient)
                 .build();
 

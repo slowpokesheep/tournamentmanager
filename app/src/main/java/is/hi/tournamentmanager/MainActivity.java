@@ -1,6 +1,5 @@
 package is.hi.tournamentmanager;
 
-import android.app.Dialog;
 import android.os.Bundle;
 import android.util.Log;
 
@@ -18,8 +17,9 @@ import androidx.navigation.ui.AppBarConfiguration;
 import androidx.navigation.ui.NavigationUI;
 
 import is.hi.tournamentmanager.service.ApiRepository;
-import is.hi.tournamentmanager.ui.errors.ErrorsDialogFragment;
+import is.hi.tournamentmanager.utils.Dialogs.ErrorsDialogFragment;
 import is.hi.tournamentmanager.utils.ApolloConnector;
+import is.hi.tournamentmanager.utils.Dialogs.SimpleMessageDialogFragment;
 import is.hi.tournamentmanager.utils.SharedPref;
 
 public class MainActivity extends AppCompatActivity {
@@ -47,8 +47,8 @@ public class MainActivity extends AppCompatActivity {
         NavigationView navDrawView = findViewById(R.id.nav_draw_view);
 
         // Passing each menu ID as a set of Ids because each menu should be considered as top level destinations.
-        mAppBarConfiguration = new AppBarConfiguration.Builder(R.id.nav_home, R.id.nav_tournaments, R.id.nav_dashboard,
-                R.id.nav_notifications, R.id.nav_profile, R.id.nav_login).setDrawerLayout(mDrawerLayout).build();
+        mAppBarConfiguration = new AppBarConfiguration.Builder(R.id.nav_home, R.id.nav_tournaments, R.id.nav_collection_profile,
+                R.id.nav_profile, R.id.nav_dashboard, R.id.nav_notifications, R.id.nav_login).setDrawerLayout(mDrawerLayout).build();
 
         // Init nav controller
         navController = Navigation.findNavController(this, R.id.nav_host_fragment);
@@ -85,6 +85,11 @@ public class MainActivity extends AppCompatActivity {
     public void showErrorsDialog(String[] errors) {
         DialogFragment newFragment = ErrorsDialogFragment.newInstance(errors);
         newFragment.show(getSupportFragmentManager(), "Errors Dialog");
+    }
+
+    public void showSimpleDialog(String title, String message) {
+        DialogFragment newFragment = SimpleMessageDialogFragment.newInstance(title, message);
+        newFragment.show(getSupportFragmentManager(), "Simple Message Dialog");
     }
 
 }

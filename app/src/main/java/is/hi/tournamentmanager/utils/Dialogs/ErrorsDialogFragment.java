@@ -1,4 +1,4 @@
-package is.hi.tournamentmanager.ui.errors;
+package is.hi.tournamentmanager.utils.Dialogs;
 
 import android.app.AlertDialog;
 import android.app.Dialog;
@@ -26,11 +26,12 @@ public class ErrorsDialogFragment extends DialogFragment {
         String[] errors = getArguments().getStringArray("errors");
         LinearLayout layout = new LinearLayout(getActivity());
         layout.setOrientation(LinearLayout.VERTICAL);
+        layout.setPadding(25, 25, 25, 25);
 
         for (String error: errors) {
             final TextView textView = new TextView(getActivity());
             textView.setText(error);
-            textView.setPadding(50, 50, 50, 50);
+            textView.setPadding(25, 25, 25, 25);
             textView.setTextColor(Color.RED);
             layout.addView(textView);
         }
@@ -38,7 +39,7 @@ public class ErrorsDialogFragment extends DialogFragment {
         return new AlertDialog.Builder(getActivity())
                 .setIcon(R.drawable.ic_error_black_24dp)
                 .setTitle("One or more errors occurred")
-                .setPositiveButton("Close", (dialog, whichButton) -> dialog.dismiss())
+                .setNegativeButton("Close", (dialog, whichButton) -> dialog.cancel())
                 .setView(layout)
                 .create();
     }

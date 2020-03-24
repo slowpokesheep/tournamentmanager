@@ -12,3 +12,14 @@ mutation Login($username: String!, $password: String!) {
         token
     }
 }
+
+mutation register($input: UserCreateMutationInput!) {
+    userCreate(input: $input) {
+        clientMutationId
+        errors {
+            field
+            messages
+        }
+    }
+}
+

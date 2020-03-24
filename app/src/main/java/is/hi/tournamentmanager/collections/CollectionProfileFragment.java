@@ -44,38 +44,30 @@ public class CollectionProfileFragment extends Fragment {
 
         // First we check authentication
 
-        String token = SharedPref.getInstance().getToken();
+        loginViewModel = new ViewModelProvider(requireActivity()).get(LoginViewModel.class);
 
-        // Token is null => log in required
-        if (token == null) {
-            loginViewModel = new ViewModelProvider(requireActivity()).get(LoginViewModel.class);
-
-            final NavController navController = Navigation.findNavController(view);
-            loginViewModel.getAuthenticationState().observe(getViewLifecycleOwner(),
-                    authenticationState -> {
-                        switch (authenticationState) {
-                            case AUTHENTICATED:
-                                Log.d("CollectionFragment", "AUTHENTICATED");
-                                authenticated(view);
-                                break;
-                            case UNAUTHENTICATED:
-                                Log.d("CollectionFragment", "UNAUTHENTICATED");
-                                navController.navigate(R.id.nav_login);
-                                break;
-                        }
-                    });
-        } else {
-            // The user has a token and can proceed, if it is invalid / expired,
-            // it will be cleared on the next query.
-            authenticated(view);
-        }
+        final NavController navController = Navigation.findNavController(view);
+        loginViewModel.getAuthenticationState().observe(getViewLifecycleOwner(),
+                authenticationState -> {
+                    Log.d("authentication state", authenticationState.name());
+                    switch (authenticationState) {
+                        case AUTHENTICATED:
+                            Log.d("CollectionFragment", "AUTHENTICATED");
+                            authenticated(view);
+                            break;
+                        case UNAUTHENTICATED:
+                            Log.d("CollectionFragment", "UNAUTHENTICATED");
+                            navController.navigate(R.id.nav_login);
+                            break;
+                    }
+                });
     }
 
     public void authenticated(View view) {
         profileCollectionAdapter = new ObjectCollectionAdapter(this);
 
         // Add fragments to the adapter
-        profileCollectionAdapter.add(new ProfileFragment(), getString(R.string.menu_profile));
+        profileCollectionAdapter.add(new ProfileFragment(loginViewModel), getString(R.string.menu_profile));
         profileCollectionAdapter.add(new DashboardFragment(), getString(R.string.menu_dashboard));
         profileCollectionAdapter.add(new NotificationsFragment(), getString(R.string.menu_notifications));
 

@@ -15,7 +15,9 @@ import com.apollographql.apollo.api.Response;
 import com.apollographql.apollo.exception.ApolloException;
 import com.apollographql.apollo.tournament.LoginMutation;
 import com.apollographql.apollo.tournament.MeQuery;
+import com.apollographql.apollo.tournament.RegisterMutation;
 import com.apollographql.apollo.tournament.TournamentsQuery;
+import com.apollographql.apollo.tournament.type.UserCreateMutationInput;
 
 import org.jetbrains.annotations.NotNull;
 
@@ -58,22 +60,19 @@ public class ApiRepository {
             .builder()
             .first(first)
             .build();
+
         ApolloConnector.getInstance().getApolloClient().query(query)
             .enqueue(new ApolloCallback<>(new ApolloCall.Callback<TournamentsQuery.Data>() {
-
             @Override
             public void onResponse(@NotNull Response<TournamentsQuery.Data> response) {
                 if (!response.hasErrors()) {
                     tournamentsData.setValue(response.data());
                 } else {
-                    SharedPref.getInstance().clearToken();
                     mainActivity.showErrorsDialog(getErrorsAsStringArray(response.errors()));
                 }
             }
-
             @Override
             public void onFailure(@NotNull ApolloException e) {
-                SharedPref.getInstance().clearToken();
                 mainActivity.showErrorsDialog(new String[]{ e.getMessage() });
             }
         }, uiHandler));
@@ -87,9 +86,9 @@ public class ApiRepository {
             .username(username)
             .password(password)
             .build();
+
         ApolloConnector.getInstance().getApolloClient().mutate(mutation)
             .enqueue(new ApolloCallback<>(new ApolloCall.Callback<LoginMutation.Data>() {
-
                 @Override
                 public void onResponse(@NotNull Response<LoginMutation.Data> response) {
                     if (!response.hasErrors()) {
@@ -102,7 +101,6 @@ public class ApiRepository {
                         mainActivity.showErrorsDialog(getErrorsAsStringArray(response.errors()));
                     }
                 }
-
                 @Override
                 public void onFailure(@NotNull ApolloException e) {
                     authenticationState.setValue(AuthenticationState.UNAUTHENTICATED);
@@ -112,31 +110,89 @@ public class ApiRepository {
             }, uiHandler));
     }
 
+    public void register(String username, String password, String password2) {
+        UserCreateMutationInput input = UserCreateMutationInput
+                .builder()
+                .username(username)
+                .password1(password)
+                .password2(password2)
+                .build();
+
+        RegisterMutation mutation = RegisterMutation
+                .builder()
+                .input(input)
+                .build();
+
+        ApolloConnector.getInstance().getApolloClient().mutate(mutation)
+                .enqueue(new ApolloCall.Callback<RegisterMutation.Data>() {
+                    @Override
+                    public void onResponse(@NotNull Response<RegisterMutation.Data> response) {
+                        List<RegisterMutation.Error> formValidationErrors = response.data().userCreate().errors();
+                        // Success
+                        if (!response.hasErrors() && formValidationErrors.size() == 0) {
+                            Log.d("Register Mutation", response.data().toString());
+                            mainActivity.showSimpleDialog(
+                                    "Success!",
+                                    "Thank you for registering. You can now " +
+                                            "log in using your credentials."
+                            );
+                        }
+                        // Error handling
+                        else {
+                            // form validation errors
+                            if (!response.hasErrors()) {
+                                ArrayList<String> formValidationMessages = new ArrayList<>();
+                                for (RegisterMutation.Error e : formValidationErrors) {
+                                    // output on the format 'field: message'
+                                    String field = e.field();
+                                    if (field.equals("username")) field = "Username";
+                                    else if (field.equals("password1")) field = "Password";
+                                    else if (field.equals("password2")) field = "Confirm Password";
+                                    for (String message: e.messages()) {
+                                        formValidationMessages.add(field + " - " + message);
+                                    }
+                                }
+                                mainActivity.showErrorsDialog(formValidationMessages.toArray(
+                                        new String[formValidationMessages.size()]
+                                ));
+                            }
+                            // internal errors
+                            else {
+                                mainActivity.showErrorsDialog(getErrorsAsStringArray(response.errors()));
+                            }
+                        }
+                    }
+                    @Override
+                    public void onFailure(@NotNull ApolloException e) {
+                        mainActivity.showErrorsDialog(new String[]{ e.getMessage() });
+                    }
+                });
+    }
+
     // ==== USER ==== //
 
     public void getMe(MutableLiveData<MeQuery.Data> meData) {
         MeQuery query = MeQuery
                 .builder()
                 .build();
+
         ApolloConnector.getInstance().getApolloClient().query(query)
-                .enqueue(new ApolloCallback<>(new ApolloCall.Callback<MeQuery.Data>() {
-
-                    @Override
-                    public void onResponse(@NotNull Response<MeQuery.Data> response) {
-                        if (!response.hasErrors()) {
-                            meData.setValue(response.data());
-                        } else {
-                            SharedPref.getInstance().clearToken();
-                            mainActivity.showErrorsDialog(getErrorsAsStringArray(response.errors()));
-                        }
-                    }
-
-                    @Override
-                    public void onFailure(@NotNull ApolloException e) {
+            .enqueue(new ApolloCallback<>(new ApolloCall.Callback<MeQuery.Data>() {
+                @Override
+                public void onResponse(@NotNull Response<MeQuery.Data> response) {
+                    if (!response.hasErrors() && response.data().me() != null) {
+                        meData.setValue(response.data());
+                    } else {
                         SharedPref.getInstance().clearToken();
-                        mainActivity.showErrorsDialog(new String[]{ e.getMessage() });
+                        mainActivity.showErrorsDialog(getErrorsAsStringArray(response.errors()));
                     }
-                }, uiHandler));
+                }
+                @Override
+                public void onFailure(@NotNull ApolloException e) {
+                    SharedPref.getInstance().clearToken();
+                    mainActivity.showErrorsDialog(new String[]{ e.getMessage() });
+                }
+            }, uiHandler));
     }
 
 }

@@ -11,6 +11,7 @@ import android.widget.EditText;
 import androidx.activity.OnBackPressedCallback;
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
+import androidx.fragment.app.DialogFragment;
 import androidx.fragment.app.Fragment;
 import androidx.lifecycle.ViewModelProvider;
 import androidx.navigation.NavController;
@@ -41,16 +42,21 @@ public class LoginFragment extends Fragment {
         navController = Navigation.findNavController(view);
         final View root = view;
 
-        Button loginButton = root.findViewById(R.id.login_form_submit);
         EditText usernameInput = root.findViewById(R.id.login_form_username);
         EditText passwordInput = root.findViewById(R.id.login_form_password);
-        loginButton.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                Log.d("login button", "click");
-                viewModel.authenticate(usernameInput.getText().toString(),
-                        passwordInput.getText().toString());
-            }
+        Button loginButton = root.findViewById(R.id.login_form_submit);
+        Button registerButton = root.findViewById(R.id.register_button);
+
+        loginButton.setOnClickListener(v -> {
+            Log.d("login button", "click");
+            viewModel.authenticate(usernameInput.getText().toString(),
+                    passwordInput.getText().toString());
+        });
+
+        registerButton.setOnClickListener(v -> {
+            Log.d("register button", "click");
+            DialogFragment newFragment = RegisterDialogFragment.newInstance();
+            newFragment.show(getParentFragmentManager(), "Register Dialog");
         });
 
         // If back button is pressed we refuse authentication and go back to home fragment
