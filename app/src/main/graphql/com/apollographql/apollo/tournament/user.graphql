@@ -3,13 +3,21 @@ query Me {
         id
         username
         email
+        name
+        dateJoined
+        lastLogin
     }
 }
+
 
 
 mutation Login($username: String!, $password: String!) {
     tokenCreate(username: $username, password: $password) {
         token
+        user {
+            id
+            idInt
+        }
     }
 }
 

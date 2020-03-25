@@ -1,4 +1,4 @@
-package is.hi.tournamentmanager.collections;
+package is.hi.tournamentmanager.ui.collections;
 
 import android.os.Bundle;
 import android.util.Log;
@@ -9,7 +9,6 @@ import android.view.ViewGroup;
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
 import androidx.fragment.app.Fragment;
-import androidx.lifecycle.Observer;
 import androidx.lifecycle.ViewModelProvider;
 import androidx.navigation.NavController;
 import androidx.navigation.Navigation;
@@ -23,13 +22,12 @@ import is.hi.tournamentmanager.ui.dashboard.DashboardFragment;
 import is.hi.tournamentmanager.ui.notifications.NotificationsFragment;
 import is.hi.tournamentmanager.ui.authentication.LoginViewModel;
 import is.hi.tournamentmanager.ui.profile.ProfileFragment;
-import is.hi.tournamentmanager.utils.ObjectCollectionAdapter;
-import is.hi.tournamentmanager.utils.SharedPref;
+import is.hi.tournamentmanager.ui.tournaments.TournamentsFragment;
 
 public class CollectionProfileFragment extends Fragment {
 
     private ViewPager2 viewPager;
-    private ObjectCollectionAdapter profileCollectionAdapter;
+    private CollectionAdapter profileCollectionAdapter;
     private LoginViewModel loginViewModel;
 
     // Load
@@ -64,12 +62,14 @@ public class CollectionProfileFragment extends Fragment {
     }
 
     public void authenticated(View view) {
-        profileCollectionAdapter = new ObjectCollectionAdapter(this);
+        profileCollectionAdapter = new CollectionAdapter(this);
 
         // Add fragments to the adapter
         profileCollectionAdapter.add(new ProfileFragment(loginViewModel), getString(R.string.menu_profile));
-        profileCollectionAdapter.add(new DashboardFragment(), getString(R.string.menu_dashboard));
-        profileCollectionAdapter.add(new NotificationsFragment(), getString(R.string.menu_notifications));
+        profileCollectionAdapter.add(TournamentsFragment.newInstance(1), "My Tournaments");
+        profileCollectionAdapter.add(TournamentsFragment.newInstance(2), "In Tournaments");
+        // profileCollectionAdapter.add(new DashboardFragment(), getString(R.string.menu_dashboard));
+        // profileCollectionAdapter.add(new NotificationsFragment(), getString(R.string.menu_notifications));
 
         // Setup viewpager
         viewPager = view.findViewById(R.id.pager);

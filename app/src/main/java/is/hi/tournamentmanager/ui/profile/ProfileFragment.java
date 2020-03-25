@@ -15,6 +15,10 @@ import androidx.lifecycle.ViewModelProvider;
 import androidx.navigation.NavController;
 import androidx.navigation.Navigation;
 
+import com.apollographql.apollo.tournament.MeQuery;
+
+import java.time.OffsetDateTime;
+
 import is.hi.tournamentmanager.R;
 import is.hi.tournamentmanager.ui.authentication.LoginViewModel;
 import is.hi.tournamentmanager.utils.SharedPref;
@@ -57,10 +61,23 @@ public class ProfileFragment extends Fragment {
     private void observeViewModel() {
         profileViewModel.getMeDataObservable().observe(getViewLifecycleOwner(), meData -> {
             if (meData != null) {
-                Log.d("Me Data", meData.toString());
-                final TextView textView = root.findViewById(R.id.text_profile);
-                String username = meData.me().username();
-                textView.setText(username);
+                final TextView usernameTextView = root.findViewById(R.id.text_profile_username);
+                final TextView emailTextView = root.findViewById(R.id.text_profile_email);
+                final TextView nameTextView = root.findViewById(R.id.text_profile_name);
+                final TextView dateJoinedTextView = root.findViewById(R.id.text_profile_date_joined);
+
+                MeQuery.Me me = meData.me();
+                usernameTextView.setText("Username: " + me.username());
+                emailTextView.setText("Email: " + me.email());
+                nameTextView.setText("Name: " + me.name());
+                String dateJoined = "";
+                try {
+                    OffsetDateTime date = OffsetDateTime.parse(me.dateJoined().toString());
+                    dateJoined = date.getDayOfMonth() + "/" + date.getMonthValue() + "/" + date.getYear();
+                } catch (Exception e) {
+                    Log.e("Date Joined Exception", e.toString());
+                }
+                dateJoinedTextView.setText("Date Joined: " + dateJoined);
             }
         });
     }

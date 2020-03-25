@@ -29,9 +29,14 @@ public class RegisterDialogFragment extends DialogFragment {
         layout.setPadding(50, 50 , 50, 50);
 
         final EditText usernameInput = new EditText(getActivity());
+        final EditText emailInput = new EditText(getActivity());
+        final EditText nameInput = new EditText(getActivity());
         final EditText passwordInput = new EditText(getActivity());
         final EditText password2Input = new EditText(getActivity());
         usernameInput.setHint("Username");
+        emailInput.setHint("Email");
+        emailInput.setInputType(InputType.TYPE_TEXT_VARIATION_EMAIL_ADDRESS);
+        nameInput.setHint("Name");
         passwordInput.setHint("Password");
         password2Input.setHint("Confirm Password");
         passwordInput.setInputType(InputType.TYPE_TEXT_VARIATION_PASSWORD);
@@ -39,6 +44,8 @@ public class RegisterDialogFragment extends DialogFragment {
         password2Input.setInputType(InputType.TYPE_TEXT_VARIATION_PASSWORD);
         password2Input.setTransformationMethod(PasswordTransformationMethod.getInstance());
         layout.addView(usernameInput);
+        layout.addView(emailInput);
+        layout.addView(nameInput);
         layout.addView(passwordInput);
         layout.addView(password2Input);
 
@@ -49,6 +56,8 @@ public class RegisterDialogFragment extends DialogFragment {
                 .setPositiveButton("Register", (dialog, whichButton) ->
                         ApiRepository.getInstance().register(
                                 usernameInput.getText().toString(),
+                                emailInput.getText().toString(),
+                                nameInput.getText().toString(),
                                 passwordInput.getText().toString(),
                                 password2Input.getText().toString()
                         ))

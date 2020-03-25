@@ -32,15 +32,21 @@ public class SharedPref {
         return pref.getString("token", null);
     }
 
-    public void setToken(String token) {
+    public int getUserId() {
+        return pref.getInt("user_id", -1);
+    }
+
+    public void setToken(String token, int userId) {
         SharedPreferences.Editor editor = pref.edit();
         editor.putString("token", token);
+        editor.putInt("user_id", userId);
         editor.commit();
     }
 
     public void clearToken() {
         SharedPreferences.Editor editor = pref.edit();
         editor.remove("token");
+        editor.remove("user_id");
         editor.commit();
     }
 

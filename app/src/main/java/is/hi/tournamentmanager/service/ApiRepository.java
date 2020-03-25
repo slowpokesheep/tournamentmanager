@@ -4,8 +4,6 @@ import android.os.Handler;
 import android.os.Looper;
 import android.util.Log;
 
-import androidx.fragment.app.Fragment;
-import androidx.lifecycle.LiveData;
 import androidx.lifecycle.MutableLiveData;
 
 import com.apollographql.apollo.ApolloCall;
@@ -55,11 +53,20 @@ public class ApiRepository {
 
     // ==== TOURNAMENTS ==== //
 
-    public void getTournaments(MutableLiveData<TournamentsQuery.Data> tournamentsData, int first, String after) {
-        TournamentsQuery query = TournamentsQuery
-            .builder()
-            .first(first).after(after)
-            .build();
+    public void getTournaments(MutableLiveData<TournamentsQuery.Data> tournamentsData, int type, int first, String after) {
+        TournamentsQuery.Builder builder = TournamentsQuery.builder();
+        // created tournaments
+        if (type == 1) {
+            Double userId = new Double(SharedPref.getInstance().getUserId());
+            builder = builder.creator(userId);
+        }
+        // in tournaments
+        else if (type == 2) {
+            Double userId = new Double(SharedPref.getInstance().getUserId());
+            builder = builder.registeredIn(userId);
+        }
+        builder = builder.first(first).after(after);
+        TournamentsQuery query = builder.build();
 
         ApolloConnector.getInstance().getApolloClient().query(query)
             .enqueue(new ApolloCallback<>(new ApolloCall.Callback<TournamentsQuery.Data>() {
@@ -93,8 +100,8 @@ public class ApiRepository {
                 public void onResponse(@NotNull Response<LoginMutation.Data> response) {
                     if (!response.hasErrors()) {
                         LoginMutation.TokenCreate token = response.data().tokenCreate();
-                        // storing token in shared preferences
-                        SharedPref.getInstance().setToken(token.token());
+                        // storing token and user id in shared preferences
+                        SharedPref.getInstance().setToken(token.token(), token.user().idInt());
                         authenticationState.setValue(AuthenticationState.AUTHENTICATED);
                     } else {
                         authenticationState.setValue(AuthenticationState.UNAUTHENTICATED);
@@ -110,10 +117,12 @@ public class ApiRepository {
             }, uiHandler));
     }
 
-    public void register(String username, String password, String password2) {
+    public void register(String username, String email, String name, String password, String password2) {
         UserCreateMutationInput input = UserCreateMutationInput
                 .builder()
                 .username(username)
+                .email(email)
+                .name(name)
                 .password1(password)
                 .password2(password2)
                 .build();
@@ -145,9 +154,9 @@ public class ApiRepository {
                                 for (RegisterMutation.Error e : formValidationErrors) {
                                     // output on the format 'field: message'
                                     String field = e.field();
-                                    if (field.equals("username")) field = "Username";
-                                    else if (field.equals("password1")) field = "Password";
+                                    if (field.equals("password1")) field = "Password";
                                     else if (field.equals("password2")) field = "Confirm Password";
+                                    else field = field.substring(0, 1).toUpperCase() + field.substring(1);
                                     for (String message: e.messages()) {
                                         formValidationMessages.add(field + " - " + message);
                                     }

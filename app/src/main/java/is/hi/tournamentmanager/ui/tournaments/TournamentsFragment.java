@@ -23,8 +23,23 @@ public class TournamentsFragment extends Fragment {
 
     private String currEndCursor = "";
     private boolean bottom = false;
+    private int type;
+
+    // type: 0 for all public tournaments, 1 for "my" tournaments, 2 for tournaments "i am" registered in
+    public static TournamentsFragment newInstance(int type) {
+        TournamentsFragment newFragment = new TournamentsFragment();
+        Bundle args = new Bundle();
+        args.putInt("type", type);
+        newFragment.setArguments(args);
+
+        return newFragment;
+    }
 
     public View onCreateView(@NonNull LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
+        Bundle args = getArguments();
+        // Nav fragment is created through XML so the bundle will be null
+        if (args == null) type = 0;
+        else type = getArguments().getInt("type", 0);
 
         tournamentsViewModel = new ViewModelProvider(this).get(TournamentsViewModel.class);
         View root = inflater.inflate(R.layout.fragment_tournaments, container, false);
@@ -57,11 +72,14 @@ public class TournamentsFragment extends Fragment {
                     Log.d("Scroll Listener", "bottom reached");
                     // We load additional data until we get a null end cursor
                     if (currEndCursor != null) {
-                        tournamentsViewModel.fetchTournaments(currEndCursor);
+                        tournamentsViewModel.fetchTournaments(type, currEndCursor);
                     }
                     bottom = true;
                 }
             }
         });
+
+        // init
+        tournamentsViewModel.fetchTournaments(type, "");
     }
 }

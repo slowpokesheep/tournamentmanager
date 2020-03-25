@@ -21,7 +21,6 @@ query Tournaments(
       pageInfo {
         endCursor
       }
-      totalCount
       edges {
         node {
           id
@@ -29,18 +28,11 @@ query Tournaments(
             id
             name
           }
-          code
-          creator {
-            id
-            username
-          }
           name
-          private
           registeredUsers {
             totalCount
           }
           slots
-          status
           statusDisplay
         }
       }

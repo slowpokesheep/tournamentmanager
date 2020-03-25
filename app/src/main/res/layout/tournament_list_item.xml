@@ -10,7 +10,7 @@
     app:justifyContent="center"
     app:showDivider="beginning|middle|end"
     app:dividerDrawable="@drawable/divider"
->
+    >
 
     <TextView
         android:id="@+id/tournament_list_item_category"
