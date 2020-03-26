@@ -39,7 +39,7 @@ public class ErrorsDialogFragment extends DialogFragment {
         return new AlertDialog.Builder(getActivity())
                 .setIcon(R.drawable.ic_error_black_24dp)
                 .setTitle("One or more errors occurred")
-                .setNegativeButton("Close", (dialog, whichButton) -> dialog.cancel())
+                .setNeutralButton("Close", (dialog, whichButton) -> dialog.cancel())
                 .setView(layout)
                 .create();
     }

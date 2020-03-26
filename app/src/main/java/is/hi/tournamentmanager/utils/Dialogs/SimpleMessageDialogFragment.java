@@ -33,7 +33,7 @@ public class SimpleMessageDialogFragment extends DialogFragment {
 
         return new AlertDialog.Builder(getActivity())
                 .setTitle(title)
-                .setNegativeButton("Close", (dialog, whichButton) -> dialog.cancel())
+                .setNeutralButton("Close", (dialog, whichButton) -> dialog.cancel())
                 .setView(layout)
                 .create();
     }

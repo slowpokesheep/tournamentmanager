@@ -61,7 +61,7 @@ public class RegisterDialogFragment extends DialogFragment {
                                 passwordInput.getText().toString(),
                                 password2Input.getText().toString()
                         ))
-                .setNegativeButton("Cancel", (dialog, whichButton) -> dialog.cancel())
+                .setNeutralButton("Cancel", (dialog, whichButton) -> dialog.cancel())
                 .create();
     }
 }

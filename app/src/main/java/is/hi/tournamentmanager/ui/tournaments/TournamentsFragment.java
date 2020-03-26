@@ -13,6 +13,7 @@ import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
 
 import is.hi.tournamentmanager.R;
+import is.hi.tournamentmanager.ui.tournaments.filters.CategoryFilterDialogFragment;
 
 public class TournamentsFragment extends Fragment {
 
@@ -81,5 +82,7 @@ public class TournamentsFragment extends Fragment {
 
         // init
         tournamentsViewModel.fetchTournaments(type, "");
+
+        // CategoryFilterDialogFragment.newInstance().show(getParentFragmentManager(),"test");
     }
 }
