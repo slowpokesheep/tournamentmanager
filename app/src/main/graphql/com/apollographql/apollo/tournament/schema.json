@@ -746,22 +746,6 @@
             {
               "args": [],
               "deprecationReason": null,
-              "description": "",
-              "isDeprecated": false,
-              "name": "email",
-              "type": {
-                "kind": "NON_NULL",
-                "name": null,
-                "ofType": {
-                  "kind": "SCALAR",
-                  "name": "String",
-                  "ofType": null
-                }
-              }
-            },
-            {
-              "args": [],
-              "deprecationReason": null,
               "description": "Designates whether the user can log into this admin site.",
               "isDeprecated": false,
               "name": "isStaff",
@@ -803,6 +787,22 @@
                 "ofType": {
                   "kind": "SCALAR",
                   "name": "DateTime",
+                  "ofType": null
+                }
+              }
+            },
+            {
+              "args": [],
+              "deprecationReason": null,
+              "description": "",
+              "isDeprecated": false,
+              "name": "email",
+              "type": {
+                "kind": "NON_NULL",
+                "name": null,
+                "ofType": {
+                  "kind": "SCALAR",
+                  "name": "String",
                   "ofType": null
                 }
               }
@@ -1580,6 +1580,18 @@
                   "name": "MatchTypeCountableConnection",
                   "ofType": null
                 }
+              }
+            },
+            {
+              "args": [],
+              "deprecationReason": null,
+              "description": null,
+              "isDeprecated": false,
+              "name": "idInt",
+              "type": {
+                "kind": "SCALAR",
+                "name": "Int",
+                "ofType": null
               }
             },
             {
@@ -3490,12 +3502,12 @@
                 }
               ],
               "deprecationReason": null,
-              "description": "Obtain JSON Web Token mutation",
+              "description": null,
               "isDeprecated": false,
               "name": "tokenCreate",
               "type": {
                 "kind": "OBJECT",
-                "name": "ObtainJSONWebToken",
+                "name": "TokenCreateMutation",
                 "ofType": null
               }
             },
@@ -3723,7 +3735,7 @@
           "possibleTypes": null
         },
         {
-          "description": "Obtain JSON Web Token mutation",
+          "description": null,
           "enumValues": null,
           "fields": [
             {
@@ -3737,12 +3749,24 @@
                 "name": "String",
                 "ofType": null
               }
+            },
+            {
+              "args": [],
+              "deprecationReason": null,
+              "description": null,
+              "isDeprecated": false,
+              "name": "user",
+              "type": {
+                "kind": "OBJECT",
+                "name": "User",
+                "ofType": null
+              }
             }
           ],
           "inputFields": null,
           "interfaces": [],
           "kind": "OBJECT",
-          "name": "ObtainJSONWebToken",
+          "name": "TokenCreateMutation",
           "possibleTypes": null
         },
         {
@@ -3944,6 +3968,30 @@
                   "name": "String",
                   "ofType": null
                 }
+              }
+            },
+            {
+              "defaultValue": null,
+              "description": "",
+              "name": "email",
+              "type": {
+                "kind": "NON_NULL",
+                "name": null,
+                "ofType": {
+                  "kind": "SCALAR",
+                  "name": "String",
+                  "ofType": null
+                }
+              }
+            },
+            {
+              "defaultValue": null,
+              "description": "",
+              "name": "name",
+              "type": {
+                "kind": "SCALAR",
+                "name": "String",
+                "ofType": null
               }
             },
             {

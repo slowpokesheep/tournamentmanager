@@ -1,19 +1,26 @@
 package is.hi.tournamentmanager.ui.profile;
 
-import androidx.lifecycle.LiveData;
+import android.app.Application;
+
+import androidx.lifecycle.AndroidViewModel;
 import androidx.lifecycle.MutableLiveData;
-import androidx.lifecycle.ViewModel;
 
-public class ProfileViewModel extends ViewModel {
+import com.apollographql.apollo.tournament.MeQuery;
 
-    private MutableLiveData<String> mText;
+import is.hi.tournamentmanager.service.ApiRepository;
 
-    public ProfileViewModel() {
-        mText = new MutableLiveData<>();
-        mText.setValue("This is profile fragment");
+public class ProfileViewModel extends AndroidViewModel {
+
+    private final MutableLiveData<MeQuery.Data> meDataObservable =
+            new MutableLiveData<>();
+
+    public ProfileViewModel(Application app) {
+        super(app);
+        ApiRepository.getInstance().getMe(meDataObservable);
     }
 
-    public LiveData<String> getText() {
-        return mText;
+
+    public MutableLiveData<MeQuery.Data> getMeDataObservable() {
+        return meDataObservable;
     }
 }

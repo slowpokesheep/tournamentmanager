@@ -1,35 +1,19 @@
 package is.hi.tournamentmanager.ui.tournaments;
 
 import android.os.Bundle;
-import android.os.Handler;
-import android.os.Looper;
 import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
-import android.widget.TextView;
 
 import androidx.annotation.NonNull;
-import androidx.annotation.Nullable;
 import androidx.fragment.app.Fragment;
-import androidx.lifecycle.Observer;
 import androidx.lifecycle.ViewModelProvider;
 import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
 
-import com.apollographql.apollo.ApolloCall;
-import com.apollographql.apollo.ApolloCallback;
-import com.apollographql.apollo.api.Response;
-import com.apollographql.apollo.exception.ApolloException;
-import com.apollographql.apollo.tournament.TournamentsQuery;
-
-import org.jetbrains.annotations.NotNull;
-
-import java.util.ArrayList;
-import java.util.List;
-
 import is.hi.tournamentmanager.R;
-import is.hi.tournamentmanager.utils.ApolloConnector;
+import is.hi.tournamentmanager.ui.tournaments.filters.CategoryFilterDialogFragment;
 
 public class TournamentsFragment extends Fragment {
 
@@ -37,59 +21,68 @@ public class TournamentsFragment extends Fragment {
     private RecyclerView recyclerView;
 
     private TournamentListAdapter adapter = new TournamentListAdapter();
-    Handler uiHandler = new Handler(Looper.getMainLooper());
 
-    private final String STATE_LIST = "Tournament List Adapter Data";
+    private String currEndCursor = "";
+    private boolean bottom = false;
+    private int type;
+
+    // type: 0 for all public tournaments, 1 for "my" tournaments, 2 for tournaments "i am" registered in
+    public static TournamentsFragment newInstance(int type) {
+        TournamentsFragment newFragment = new TournamentsFragment();
+        Bundle args = new Bundle();
+        args.putInt("type", type);
+        newFragment.setArguments(args);
+
+        return newFragment;
+    }
 
     public View onCreateView(@NonNull LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
+        Bundle args = getArguments();
+        // Nav fragment is created through XML so the bundle will be null
+        if (args == null) type = 0;
+        else type = getArguments().getInt("type", 0);
 
         tournamentsViewModel = new ViewModelProvider(this).get(TournamentsViewModel.class);
         View root = inflater.inflate(R.layout.fragment_tournaments, container, false);
-        final TextView textView = root.findViewById(R.id.text_tournaments);
 
         recyclerView = root.findViewById(R.id.tournament_list);
         LinearLayoutManager layoutManager = new LinearLayoutManager(getContext());
         recyclerView.setLayoutManager(layoutManager);
-        getTournaments(20);
         recyclerView.setAdapter(adapter);
 
-        /*
-        tournamentsViewModel.getText().observe(getViewLifecycleOwner(), new Observer<String>() {
-            @Override
-            public void onChanged(@Nullable String s) {
-                textView.setText(s);
-            }
-        });
-        */
+        observeViewModel();
 
         return root;
     }
 
-    @Override
-    public void onSaveInstanceState(Bundle outState) {
-        Log.d("Tournament", "saving state...");
-        super.onSaveInstanceState(outState);
-        outState.putParcelableArrayList(STATE_LIST, (ArrayList) adapter.getData());
-    }
+    private void observeViewModel() {
+        tournamentsViewModel.getTournamentsDataObservable().observe(getViewLifecycleOwner(), tournamentsData -> {
+            if (tournamentsData != null) {
+                adapter.appendData(tournamentsData);
+                currEndCursor = tournamentsData.tournaments().pageInfo().endCursor();
+                bottom = false;
+            }
+        });
 
-    public void getTournaments(int first) {
-        ApolloConnector.getApolloClient().query(
-            TournamentsQuery
-                    .builder()
-                    .first(first)
-                    .build())
-            .enqueue(new ApolloCallback<>(new ApolloCall.Callback<TournamentsQuery.Data>() {
-                @Override
-                public void onResponse(@NotNull Response<TournamentsQuery.Data> response) {
-                    // Log.d("Tournament", "Response: " + response.data());
-                    List<TournamentsQuery.Edge> edges = response.data().tournaments().edges();
-                    adapter.setData(edges);
+        // Scroll listener so we can load more tournaments when the bottom of the list is reached
+        recyclerView.addOnScrollListener(new RecyclerView.OnScrollListener() {
+            @Override
+            public void onScrollStateChanged(@NonNull RecyclerView recyclerView, int newState) {
+                super.onScrollStateChanged(recyclerView, newState);
+                if (!recyclerView.canScrollVertically(1) && !bottom) {
+                    Log.d("Scroll Listener", "bottom reached");
+                    // We load additional data until we get a null end cursor
+                    if (currEndCursor != null) {
+                        tournamentsViewModel.fetchTournaments(type, currEndCursor);
+                    }
+                    bottom = true;
                 }
+            }
+        });
 
-                @Override
-                public void onFailure(@NotNull ApolloException e) {
-                    Log.d("Tournament", "Exception " + e.getMessage(), e);
-                }
-            }, uiHandler));
+        // init
+        tournamentsViewModel.fetchTournaments(type, "");
+
+        // CategoryFilterDialogFragment.newInstance().show(getParentFragmentManager(),"test");
     }
 }
