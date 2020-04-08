@@ -1,89 +1,84 @@
 package is.hi.tournamentmanager.ui.profile;
 
 import android.os.Bundle;
-import android.os.Handler;
-import android.os.Looper;
 import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.Button;
-import android.widget.EditText;
 import android.widget.TextView;
 
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
 import androidx.fragment.app.Fragment;
-import androidx.lifecycle.Observer;
 import androidx.lifecycle.ViewModelProvider;
+import androidx.navigation.NavController;
+import androidx.navigation.Navigation;
 
-import com.apollographql.apollo.ApolloCall;
-import com.apollographql.apollo.ApolloCallback;
-import com.apollographql.apollo.api.Response;
-import com.apollographql.apollo.exception.ApolloException;
-import com.apollographql.apollo.tournament.LoginMutation;
-import com.apollographql.apollo.tournament.TournamentsQuery;
+import com.apollographql.apollo.tournament.MeQuery;
 
-import org.jetbrains.annotations.NotNull;
-
-import java.util.List;
+import java.time.OffsetDateTime;
 
 import is.hi.tournamentmanager.R;
-import is.hi.tournamentmanager.utils.ApolloConnector;
+import is.hi.tournamentmanager.ui.authentication.LoginViewModel;
+import is.hi.tournamentmanager.utils.SharedPref;
 
 public class ProfileFragment extends Fragment {
 
     private ProfileViewModel profileViewModel;
+    private LoginViewModel loginViewModel;
+    private View root;
 
-    private Handler uiHandler = new Handler(Looper.getMainLooper());
+    public ProfileFragment(LoginViewModel loginViewModel) {
+        this.loginViewModel = loginViewModel;
+    }
 
     public View onCreateView(@NonNull LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
 
         profileViewModel = new ViewModelProvider(this).get(ProfileViewModel.class);
-        View root = inflater.inflate(R.layout.fragment_profile, container, false);
-        final TextView textView = root.findViewById(R.id.text_profile);
+        root = inflater.inflate(R.layout.fragment_profile, container, false);
 
-        Button loginButton = root.findViewById(R.id.login_form_submit);
-        EditText usernameInput = root.findViewById(R.id.login_form_username);
-        EditText passwordInput = root.findViewById(R.id.login_form_password);
-        loginButton.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                Log.d("login button", "click");
-                String username = usernameInput.getText().toString();
-                String password = passwordInput.getText().toString();
-                login(username, password);
-            }
-        });
-
-        profileViewModel.getText().observe(getViewLifecycleOwner(), new Observer<String>() {
-            @Override
-            public void onChanged(@Nullable String s) {
-                textView.setText(s);
-            }
-        });
         return root;
     }
 
-    public void login(String username, String password) {
-        LoginMutation mutation = LoginMutation
-            .builder()
-            .username(username)
-            .password(password)
-            .build();
-        ApolloConnector.getInstance().getApolloClient().mutate(mutation)
-            .enqueue(new ApolloCallback<>(new ApolloCall.Callback<LoginMutation.Data>() {
+    @Override
+    public void onViewCreated(@NonNull View view, @Nullable Bundle savedInstanceState) {
+        super.onViewCreated(view, savedInstanceState);
+        NavController navController = Navigation.findNavController(getActivity(), R.id.nav_host_fragment);
 
-                @Override
-                public void onResponse(@NotNull Response<LoginMutation.Data> response) {
-                    Log.d("Login", "Response: " + response.data());
+        Button signOut = root.findViewById(R.id.sign_out_button);
+
+        signOut.setOnClickListener(v -> {
+            Log.d("sign out button", "click");
+            loginViewModel.refuseAuthentication();
+            SharedPref.getInstance().clearToken();
+            navController.popBackStack(R.id.nav_home, false);
+        });
+
+        observeViewModel();
+    }
+
+    private void observeViewModel() {
+        profileViewModel.getMeDataObservable().observe(getViewLifecycleOwner(), meData -> {
+            if (meData != null) {
+                final TextView usernameTextView = root.findViewById(R.id.text_profile_username);
+                final TextView emailTextView = root.findViewById(R.id.text_profile_email);
+                final TextView nameTextView = root.findViewById(R.id.text_profile_name);
+                final TextView dateJoinedTextView = root.findViewById(R.id.text_profile_date_joined);
+
+                MeQuery.Me me = meData.me();
+                usernameTextView.setText("Username: " + me.username());
+                emailTextView.setText("Email: " + me.email());
+                nameTextView.setText("Name: " + me.name());
+                String dateJoined = "";
+                try {
+                    OffsetDateTime date = OffsetDateTime.parse(me.dateJoined().toString());
+                    dateJoined = date.getDayOfMonth() + "/" + date.getMonthValue() + "/" + date.getYear();
+                } catch (Exception e) {
+                    Log.e("Date Joined Exception", e.toString());
                 }
-
-                @Override
-                public void onFailure(@NotNull ApolloException e) {
-                    Log.d("Tournament", "Exception " + e.getMessage(), e);
-                }
-
-            }, uiHandler));
+                dateJoinedTextView.setText("Date Joined: " + dateJoined);
+            }
+        });
     }
 }

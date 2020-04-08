@@ -73,4 +73,4 @@ app:navGraph="@navigation/mobile_navigation"
 
 ## Apollo GraphQL
 
-* ./gradlew generateApolloSources
+* Rebuild models: gradlew generateApolloSources

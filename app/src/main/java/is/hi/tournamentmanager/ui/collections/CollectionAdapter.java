@@ -1,4 +1,4 @@
-package is.hi.tournamentmanager.utils;
+package is.hi.tournamentmanager.ui.collections;
 
 import android.util.Pair;
 
@@ -9,10 +9,10 @@ import java.util.ArrayList;
 import java.util.List;
 
 // An object collection
-public class ObjectCollectionAdapter extends FragmentStateAdapter {
+public class CollectionAdapter extends FragmentStateAdapter {
     private final List<Pair<Fragment, String>> mFragmentList = new ArrayList<>();
 
-    public ObjectCollectionAdapter(Fragment fragment) {
+    public CollectionAdapter(Fragment fragment) {
         super(fragment);
     }
 

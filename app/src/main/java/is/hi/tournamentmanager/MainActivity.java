@@ -2,6 +2,8 @@ package is.hi.tournamentmanager;
 
 import android.os.Bundle;
 import android.util.Log;
+import android.view.View;
+import android.widget.TextView;
 
 import com.google.android.material.bottomnavigation.BottomNavigationView;
 import com.google.android.material.navigation.NavigationView;
@@ -10,12 +12,17 @@ import androidx.appcompat.app.AppCompatActivity;
 import androidx.appcompat.widget.Toolbar;
 import androidx.core.view.GravityCompat;
 import androidx.drawerlayout.widget.DrawerLayout;
+import androidx.fragment.app.DialogFragment;
 import androidx.navigation.NavController;
 import androidx.navigation.Navigation;
 import androidx.navigation.ui.AppBarConfiguration;
 import androidx.navigation.ui.NavigationUI;
 
+import is.hi.tournamentmanager.service.ApiRepository;
+import is.hi.tournamentmanager.utils.Dialogs.ErrorsDialogFragment;
 import is.hi.tournamentmanager.utils.ApolloConnector;
+import is.hi.tournamentmanager.utils.Dialogs.SimpleMessageDialogFragment;
+import is.hi.tournamentmanager.utils.SharedPref;
 
 public class MainActivity extends AppCompatActivity {
 
@@ -42,7 +49,8 @@ public class MainActivity extends AppCompatActivity {
         NavigationView navDrawView = findViewById(R.id.nav_draw_view);
 
         // Passing each menu ID as a set of Ids because each menu should be considered as top level destinations.
-        mAppBarConfiguration = new AppBarConfiguration.Builder(R.id.nav_home, R.id.nav_tournaments, R.id.nav_dashboard, R.id.nav_notifications, R.id.nav_profile).setDrawerLayout(mDrawerLayout).build();
+        mAppBarConfiguration = new AppBarConfiguration.Builder(R.id.nav_home, R.id.nav_tournaments, R.id.nav_collection_profile,
+                R.id.nav_profile, R.id.nav_dashboard, R.id.nav_notifications, R.id.nav_login).setDrawerLayout(mDrawerLayout).build();
 
         // Init nav controller
         navController = Navigation.findNavController(this, R.id.nav_host_fragment);
@@ -51,7 +59,11 @@ public class MainActivity extends AppCompatActivity {
         NavigationUI.setupWithNavController(navView, navController);
 
         // Init apollo client
-        ApolloConnector.getInstance().setupApollo();
+        ApolloConnector.getInstance().setupApollo(getApplication(), this);
+        // Init shared preferences
+        SharedPref.init(getApplication());
+        // init Api repository
+        ApiRepository.getInstance().init(this);
     }
 
     // Handle back button
@@ -70,6 +82,24 @@ public class MainActivity extends AppCompatActivity {
     public boolean onSupportNavigateUp() {
         NavController navController = Navigation.findNavController(this, R.id.nav_host_fragment);
         return NavigationUI.navigateUp(navController, mAppBarConfiguration);// || super.onSupportNavigateUp();
+    }
+
+    public void showErrorsDialog(String[] errors) {
+        DialogFragment newFragment = ErrorsDialogFragment.newInstance(errors);
+        newFragment.show(getSupportFragmentManager(), "Errors Dialog");
+    }
+
+    public void showSimpleDialog(String title, String message) {
+        DialogFragment newFragment = SimpleMessageDialogFragment.newInstance(title, message);
+        newFragment.show(getSupportFragmentManager(), "Simple Message Dialog");
+    }
+
+    public void displaySpinner() {
+        findViewById(R.id.spinner).setVisibility(View.VISIBLE);
+    }
+
+    public void hideSpinner() {
+        findViewById(R.id.spinner).setVisibility(View.GONE);
     }
 
 }

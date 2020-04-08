@@ -1,19 +1,22 @@
 package is.hi.tournamentmanager.ui.tournaments;
 
-import androidx.lifecycle.LiveData;
 import androidx.lifecycle.MutableLiveData;
 import androidx.lifecycle.ViewModel;
 
+import com.apollographql.apollo.tournament.TournamentsQuery;
+
+import is.hi.tournamentmanager.service.ApiRepository;
+
 public class TournamentsViewModel extends ViewModel {
 
-    private MutableLiveData<String> mText;
+    private final MutableLiveData<TournamentsQuery.Data> tournamentsDataObservable =
+            new MutableLiveData<>();
 
-    public TournamentsViewModel() {
-        mText = new MutableLiveData<>();
-        mText.setValue("This is tournaments fragment");
+    public MutableLiveData<TournamentsQuery.Data> getTournamentsDataObservable() {
+        return tournamentsDataObservable;
     }
 
-    public LiveData<String> getText() {
-        return mText;
+    public void fetchTournaments(int type, String endCursor) {
+        ApiRepository.getInstance().getTournaments(tournamentsDataObservable, type, 20, endCursor);
     }
 }
