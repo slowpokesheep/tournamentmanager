@@ -18,8 +18,6 @@ import com.google.android.material.tabs.TabLayout;
 import com.google.android.material.tabs.TabLayoutMediator;
 
 import is.hi.tournamentmanager.R;
-import is.hi.tournamentmanager.ui.dashboard.DashboardFragment;
-import is.hi.tournamentmanager.ui.notifications.NotificationsFragment;
 import is.hi.tournamentmanager.ui.authentication.LoginViewModel;
 import is.hi.tournamentmanager.ui.profile.ProfileFragment;
 import is.hi.tournamentmanager.ui.tournaments.TournamentsFragment;
@@ -32,7 +30,7 @@ public class CollectionProfileFragment extends Fragment {
 
     // Load
     public View onCreateView(@NonNull LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
-        return inflater.inflate(R.layout.fragment_collection_profile, container, false);
+        return inflater.inflate(R.layout.fragment_collection, container, false);
     }
 
     // After onCreateView
@@ -66,10 +64,8 @@ public class CollectionProfileFragment extends Fragment {
 
         // Add fragments to the adapter
         profileCollectionAdapter.add(new ProfileFragment(loginViewModel), getString(R.string.menu_profile));
-        profileCollectionAdapter.add(TournamentsFragment.newInstance(1), "My Tournaments");
-        profileCollectionAdapter.add(TournamentsFragment.newInstance(2), "In Tournaments");
-        // profileCollectionAdapter.add(new DashboardFragment(), getString(R.string.menu_dashboard));
-        // profileCollectionAdapter.add(new NotificationsFragment(), getString(R.string.menu_notifications));
+        profileCollectionAdapter.add(TournamentsFragment.newInstance(1, 0), "My Tournaments");
+        profileCollectionAdapter.add(TournamentsFragment.newInstance(2, 0), "In Tournaments");
 
         // Setup viewpager
         viewPager = view.findViewById(R.id.pager);

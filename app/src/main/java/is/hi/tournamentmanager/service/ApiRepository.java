@@ -14,6 +14,7 @@ import com.apollographql.apollo.exception.ApolloException;
 import com.apollographql.apollo.tournament.LoginMutation;
 import com.apollographql.apollo.tournament.MeQuery;
 import com.apollographql.apollo.tournament.RegisterMutation;
+import com.apollographql.apollo.tournament.TournamentDetailsQuery;
 import com.apollographql.apollo.tournament.TournamentsQuery;
 import com.apollographql.apollo.tournament.type.UserCreateMutationInput;
 
@@ -24,6 +25,7 @@ import java.util.List;
 
 import is.hi.tournamentmanager.MainActivity;
 import is.hi.tournamentmanager.ui.authentication.LoginViewModel.AuthenticationState;
+import is.hi.tournamentmanager.ui.tournaments.TournamentDetails;
 import is.hi.tournamentmanager.utils.ApolloConnector;
 import is.hi.tournamentmanager.utils.SharedPref;
 
@@ -53,7 +55,7 @@ public class ApiRepository {
 
     // ==== TOURNAMENTS ==== //
 
-    public void getTournaments(MutableLiveData<TournamentsQuery.Data> tournamentsData, int type, int first, String after) {
+    public void getTournaments(MutableLiveData<TournamentsQuery.Data> tournamentsData, int type, int superCategory, String search, int first, String after) {
         TournamentsQuery.Builder builder = TournamentsQuery.builder();
         // created tournaments
         if (type == 1) {
@@ -64,6 +66,14 @@ public class ApiRepository {
         else if (type == 2) {
             Double userId = new Double(SharedPref.getInstance().getUserId());
             builder = builder.registeredIn(userId);
+        }
+        // 0 - all, 1 - sports, 2 - gaming
+        if (superCategory > 0) {
+            builder = builder.superCategory((double) superCategory);
+        }
+        // search string for categories + name
+        if (search.length() > 0) {
+            builder = builder.search(search);
         }
         builder = builder.first(first).after(after);
         TournamentsQuery query = builder.build();
@@ -83,6 +93,29 @@ public class ApiRepository {
                 mainActivity.showErrorsDialog(new String[]{ e.getMessage() });
             }
         }, uiHandler));
+    }
+
+    public void getTournamentDetails(MutableLiveData<TournamentDetailsQuery.Data> tournamentDetailsData, String code) {
+        TournamentDetailsQuery.Builder builder = TournamentDetailsQuery.builder();
+        builder.code(code);
+        TournamentDetailsQuery query = builder.build();
+
+        ApolloConnector.getInstance().getApolloClient().query(query)
+            .enqueue(new ApolloCallback<>(new ApolloCall.Callback<TournamentDetailsQuery.Data>() {
+                @Override
+                public void onResponse(@NotNull Response<TournamentDetailsQuery.Data> response) {
+                    if (!response.hasErrors()) {
+                        tournamentDetailsData.setValue(response.data());
+                    } else {
+                        mainActivity.showErrorsDialog(getErrorsAsStringArray(response.errors()));
+                    }
+                }
+                @Override
+                public void onFailure(@NotNull ApolloException e) {
+                    mainActivity.showErrorsDialog(new String[]{ e.getMessage() });
+                }
+
+            }, uiHandler));
     }
 
     // ==== AUTHENTICATION ==== //

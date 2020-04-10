@@ -7,6 +7,7 @@ query Tournaments(
     $categories: String
     $creator: Float
     $registeredIn: Float
+    $search: String
   ) {
     tournaments(
       first: $first
@@ -17,6 +18,7 @@ query Tournaments(
       category_Name_In: $categories
       creator: $creator
       registeredIn: $registeredIn
+      search: $search
     ) {
       pageInfo {
         endCursor
@@ -24,6 +26,7 @@ query Tournaments(
       edges {
         node {
           id
+          code
           category {
             id
             name
@@ -38,3 +41,45 @@ query Tournaments(
       }
     }
   }
+
+query TournamentDetails($code: String) {
+    tournament(code: $code) {
+        id
+        name
+        creator {
+            id
+            username
+        }
+        admins {
+            edges {
+                node {
+                    id
+                    username
+                }
+            }
+        }
+        lastModified
+        category {
+            id
+            name
+        }
+        registeredUsers {
+            edges {
+                node {
+                    id
+                    username
+                }
+            }
+        }
+        private
+        statusDisplay
+        matchBracket
+        nRounds
+        userIsRegistered
+        location
+        date
+        time
+        canEdit
+        code
+    }
+}

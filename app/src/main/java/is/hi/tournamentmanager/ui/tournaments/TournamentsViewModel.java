@@ -16,7 +16,7 @@ public class TournamentsViewModel extends ViewModel {
         return tournamentsDataObservable;
     }
 
-    public void fetchTournaments(int type, String endCursor) {
-        ApiRepository.getInstance().getTournaments(tournamentsDataObservable, type, 20, endCursor);
+    public void fetchTournaments(int type, int superCategory, String search, String endCursor) {
+        ApiRepository.getInstance().getTournaments(tournamentsDataObservable, type, superCategory, search, 20, endCursor);
     }
 }
