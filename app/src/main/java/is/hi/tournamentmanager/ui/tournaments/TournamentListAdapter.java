@@ -1,22 +1,30 @@
 package is.hi.tournamentmanager.ui.tournaments;
 
+import android.app.Activity;
+import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.TextView;
 
+import androidx.fragment.app.DialogFragment;
+import androidx.fragment.app.FragmentActivity;
+import androidx.fragment.app.FragmentManager;
 import androidx.recyclerview.widget.RecyclerView;
 
 import com.apollographql.apollo.tournament.TournamentsQuery;
 
-import java.lang.reflect.Array;
 import java.util.ArrayList;
 import java.util.Collections;
 import java.util.List;
 
+import is.hi.tournamentmanager.MainActivity;
 import is.hi.tournamentmanager.R;
+import is.hi.tournamentmanager.utils.Dialogs.ErrorsDialogFragment;
 
 class TournamentListAdapter extends RecyclerView.Adapter<TournamentListAdapter.TournamentListViewHolder> {
+    FragmentManager fragmentManager;
+
     public static class TournamentListViewHolder extends RecyclerView.ViewHolder {
         public TextView categoryView;
         public TextView nameView;
@@ -32,7 +40,9 @@ class TournamentListAdapter extends RecyclerView.Adapter<TournamentListAdapter.T
 
     private List<TournamentsQuery.Edge> data = Collections.emptyList();
 
-    TournamentListAdapter() { }
+    TournamentListAdapter(FragmentManager m) {
+        fragmentManager = m;
+    }
 
     public void setData(TournamentsQuery.Data d) {
         data = d.tournaments().edges();
@@ -69,6 +79,14 @@ class TournamentListAdapter extends RecyclerView.Adapter<TournamentListAdapter.T
         holder.nameView.setText(node.name());
         String slots = node.registeredUsers().totalCount() + "/" + node.slots();
         holder.slotsView.setText(slots);
+        // click listener, go to tournament details fragment
+        holder.itemView.setOnClickListener(v -> {
+            DialogFragment newFragment = TournamentDetails.newInstance(node.code());
+            newFragment.show(
+                     fragmentManager,
+                    "Tournament Dialog"
+            );
+        });
     }
 
     @Override
