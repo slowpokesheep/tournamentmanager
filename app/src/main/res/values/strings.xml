@@ -16,5 +16,19 @@
     <string name="menu_dashboard">Dashboard</string>
     <string name="menu_notifications">Notifications</string>
     <string name="menu_login">Login</string>
+    <!--Tournament items -->
+    <string name="tournament_register_code">Code:</string>
+    <string name="tournament_register_status">Status:</string>
+    <string name="tournament_register_location">Location:</string>
+    <string name="tournament_register_name">Name:</string>
+    <string name="tournament_register_host">Host:</string>
+    <string name="tournament_register_date">Date:</string>
+    <string name="tournament_register_time">Time:</string>
+    <string name="tournament_register_private">Private:</string>
+    <string name="tournament_register_category">Category:</string>
+    <string name="tournament_register">Registered users</string>
+    <string name="tournament_collection">Tournament Details</string>
+    <string name="tournament_register_register">Register</string>
+    <string name="tournament_register_seed">Seed</string>
 
 </resources>
