@@ -1,6 +1,7 @@
 package is.hi.tournamentmanager.ui.tournaments;
 
 import android.app.Activity;
+import android.os.Bundle;
 import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -86,7 +87,10 @@ class TournamentListAdapter extends RecyclerView.Adapter<TournamentListAdapter.T
         // click listener, go to tournament details fragment
         holder.itemView.setOnClickListener(v -> {
             final NavController navController = Navigation.findNavController(holder.itemView);
-            navController.navigate(R.id.nav_tournament);
+
+            Bundle args = new Bundle();
+            args.putString("username", "siggi");
+            navController.navigate(R.id.nav_tournament, args);
             /*Fragment newFragment = new CollectionTournamentFragment();
             fragmentManager.beginTransaction().replace(R.id.nav_host_fragment, newFragment).addToBackStack(null).commit();
 
