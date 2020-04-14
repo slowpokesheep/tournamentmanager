@@ -14,6 +14,7 @@ import com.google.android.material.tabs.TabLayout;
 import com.google.android.material.tabs.TabLayoutMediator;
 
 import is.hi.tournamentmanager.R;
+import is.hi.tournamentmanager.ui.tournaments.TournamentDetails;
 import is.hi.tournamentmanager.ui.tournaments.TournamentInfoFragment;
 import is.hi.tournamentmanager.ui.tournaments.TournamentRegisterFragment;
 import is.hi.tournamentmanager.ui.tournaments.TournamentsFragment;
@@ -21,26 +22,33 @@ import is.hi.tournamentmanager.ui.tournaments.TournamentsFragment;
 public class CollectionTournamentFragment extends Fragment {
     private ViewPager2 viewPager;
     private CollectionAdapter tournamentsCollectionAdapter;
-    private String name;
+    private String code;
 
-    public void newInstance(String name){
-        this.name = name;
-    }
 
     public View onCreateView(@NonNull LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
-        String user = getArguments().getString("username");
-        System.out.println(user);
+        String node = getArguments().getString("node");
+        code = node;
         return inflater.inflate(R.layout.fragment_collection, container, false);
     }
 
     @Override
     public void onViewCreated(@NonNull View view, @Nullable Bundle savedInstanceState) {
         super.onViewCreated(view, savedInstanceState);
+        Bundle info = new Bundle();
+        info.putString("name", "Keppni");
+        info.putString("date", "19.04.2020");
+        info.putString("time", "19:00:00");
+        info.putString("status", "Ongoing");
+        info.putString("private", "no");
+        info.putString("category", "LoL");
+        info.putString("host", "Flóki");
+        info.putString("location", "Reykjavík");
+        info.putString("code", code);
 
         tournamentsCollectionAdapter = new CollectionAdapter(this);
-        tournamentsCollectionAdapter.add(TournamentInfoFragment.newInstance(), "Info");
+        tournamentsCollectionAdapter.add(TournamentInfoFragment.newInstance(info), "Info");
         tournamentsCollectionAdapter.add(TournamentRegisterFragment.newInstance(), "Register List");
-        tournamentsCollectionAdapter.add(TournamentInfoFragment.newInstance(), "Info");
+        tournamentsCollectionAdapter.add(TournamentInfoFragment.newInstance(info), "Brackets");
 
         viewPager = view.findViewById(R.id.pager);
         viewPager.setAdapter(tournamentsCollectionAdapter);

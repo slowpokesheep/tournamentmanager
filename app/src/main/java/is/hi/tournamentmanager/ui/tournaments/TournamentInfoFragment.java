@@ -14,6 +14,7 @@ import android.widget.TextView;
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
 import androidx.appcompat.app.AppCompatActivity;
+import androidx.fragment.app.DialogFragment;
 import androidx.fragment.app.Fragment;
 import androidx.lifecycle.Observer;
 import androidx.lifecycle.ViewModelProvider;
@@ -41,10 +42,12 @@ public class TournamentInfoFragment extends Fragment {
         return root;
     }
 
+
     @Override
     public void onViewCreated(@NonNull View view, @Nullable Bundle savedInstaceState){
         super.onViewCreated(view, savedInstaceState);
         Log.d("info","fragment");
+        Bundle args = getArguments();
         tournamentInfoViewModel = new ViewModelProvider(requireActivity()).get(TournamentInfoViewModel.class);
         final View root = view;
 
@@ -57,15 +60,16 @@ public class TournamentInfoFragment extends Fragment {
         TextView privateLabel = root.findViewById(R.id.private_label);
         TextView nameLabel = root.findViewById(R.id.name_label);
         TextView timeLabel = root.findViewById(R.id.tima_label);
-        codeLabel.setText("EBAXT");
-        hostLabel.setText("Flóki");
-        statusLabel.setText("Ongoing");
-        locationLabel.setText("Reykjavík");
-        categoryLabel.setText("LoL");
-        dateLabel.setText("14.04.2020");
-        privateLabel.setText("no");
-        nameLabel.setText("Keppni fyrir lúða");
-        timeLabel.setText("19:30:00");
+        Button register = root.findViewById(R.id.register_button);
+        codeLabel.setText(args.getString("code"));
+        hostLabel.setText(args.getString("host"));
+        statusLabel.setText(args.getString("status"));
+        locationLabel.setText(args.getString("location"));
+        categoryLabel.setText(args.getString("category"));
+        dateLabel.setText(args.getString("date"));
+        privateLabel.setText(args.getString("private"));
+        nameLabel.setText(args.getString("name"));
+        timeLabel.setText(args.getString("time"));
     }
 
     @Override
@@ -74,9 +78,8 @@ public class TournamentInfoFragment extends Fragment {
     }
 
     // type: 0 for all public tournaments, 1 for "my" tournaments, 2 for tournaments "i am" registered in
-    public static TournamentInfoFragment newInstance() {
+    public static TournamentInfoFragment newInstance(Bundle args) {
         TournamentInfoFragment newFragment = new TournamentInfoFragment();
-        Bundle args = new Bundle();
         newFragment.setArguments(args);
 
         return newFragment;

@@ -52,7 +52,7 @@
         android:label="@string/tournament_collection"
         tools:layout="@layout/fragment_tournament_info">
         <argument
-            android:name="username"
+            android:name="node"
             />
     </fragment>
 
