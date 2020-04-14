@@ -1,4 +1,9 @@
 package is.hi.tournamentmanager.ui.tournaments;
 
-public class TournamentRegisterViewModel {
+import androidx.lifecycle.ViewModel;
+
+public class TournamentRegisterViewModel extends ViewModel {
+    public int getData(){
+        return 0;
+    }
 }

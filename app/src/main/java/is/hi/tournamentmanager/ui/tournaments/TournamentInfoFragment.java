@@ -9,6 +9,7 @@ import android.view.View;
 import android.view.ViewGroup;
 import android.widget.Button;
 import android.widget.EditText;
+import android.widget.TextView;
 
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
@@ -45,15 +46,15 @@ public class TournamentInfoFragment extends Fragment {
         viewModel = new ViewModelProvider(requireActivity()).get(TournamentInfoViewModel.class);
         final View root = view;
 
-        EditText codeLabel = root.findViewById(R.id.code_label);
-        EditText hostLabel = root.findViewById(R.id.host_label);
-        EditText statusLabel = root.findViewById(R.id.status_label);
-        EditText locationLabel = root.findViewById(R.id.location_label);
-        EditText categoryLabel = root.findViewById(R.id.category_label);
-        EditText dateLabel = root.findViewById(R.id.date_label);
-        EditText privateLabel = root.findViewById(R.id.private_label);
-        EditText nameLabel = root.findViewById(R.id.name_label);
-        EditText timeLabel = root.findViewById(R.id.tima_label);
+        TextView codeLabel = root.findViewById(R.id.code_label);
+        TextView hostLabel = root.findViewById(R.id.host_label);
+        TextView statusLabel = root.findViewById(R.id.status_label);
+        TextView locationLabel = root.findViewById(R.id.location_label);
+        TextView categoryLabel = root.findViewById(R.id.category_label);
+        TextView dateLabel = root.findViewById(R.id.date_label);
+        TextView privateLabel = root.findViewById(R.id.private_label);
+        TextView nameLabel = root.findViewById(R.id.name_label);
+        TextView timeLabel = root.findViewById(R.id.tima_label);
         codeLabel.setText("EBAXT");
         hostLabel.setText("Flóki");
         statusLabel.setText("Ongoing");
@@ -63,8 +64,7 @@ public class TournamentInfoFragment extends Fragment {
         privateLabel.setText("no");
         nameLabel.setText("Keppni fyrir lúða");
         timeLabel.setText("19:30:00");
-
-        observeViewModel(root);
+        //observeViewModel(root);
 
 
     }
