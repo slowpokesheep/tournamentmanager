@@ -28,6 +28,8 @@ public class CollectionTournamentFragment extends Fragment {
     }
 
     public View onCreateView(@NonNull LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
+        String user = getArguments().getString("username");
+        System.out.println(user);
         return inflater.inflate(R.layout.fragment_collection, container, false);
     }
 

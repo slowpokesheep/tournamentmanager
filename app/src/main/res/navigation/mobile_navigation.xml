@@ -50,6 +50,10 @@
         android:id="@+id/nav_tournament"
         android:name="is.hi.tournamentmanager.ui.collections.CollectionTournamentFragment"
         android:label="@string/tournament_collection"
-        tools:layout="@layout/fragment_tournament_info" />
+        tools:layout="@layout/fragment_tournament_info">
+        <argument
+            android:name="username"
+            />
+    </fragment>
 
 </navigation>
