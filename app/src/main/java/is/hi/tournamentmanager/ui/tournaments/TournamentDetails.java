@@ -59,21 +59,6 @@ public class TournamentDetails extends DialogFragment {
     private void observeViewModel(String code) {
         viewModel.getTournamentDetailsDataObservable().observe(getViewLifecycleOwner(), tournamentDetailsData -> {
             if (tournamentDetailsData != null) {
-                TextView nameViewLabel = new TextView(getActivity());
-                TextView nameView = new TextView(getActivity());
-                nameViewLabel.setText("Name: ");
-                nameView.setText(tournamentDetailsData.tournament().name());
-                TextView codeViewLabel = new TextView(getActivity());
-                TextView codeView = new TextView(getActivity());
-                codeViewLabel.setText("code: ");
-                codeView.setText(code);
-
-                GridLayout infoGrid = root.findViewById(R.id.tournament_details_info_grid);
-                infoGrid.addView(nameViewLabel);
-                infoGrid.addView(nameView);
-                infoGrid.addView(codeViewLabel);
-                infoGrid.addView(codeView);
-
                 // match bracket
                 int nRounds = tournamentDetailsData.tournament().nRounds();
                 int firstRoundMatches = (int) Math.pow(2, nRounds);

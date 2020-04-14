@@ -89,7 +89,7 @@ class TournamentListAdapter extends RecyclerView.Adapter<TournamentListAdapter.T
             final NavController navController = Navigation.findNavController(holder.itemView);
 
             Bundle args = new Bundle();
-            args.putString("username", "siggi");
+            args.putString("node",node.code());
             navController.navigate(R.id.nav_tournament, args);
             /*Fragment newFragment = new CollectionTournamentFragment();
             fragmentManager.beginTransaction().replace(R.id.nav_host_fragment, newFragment).addToBackStack(null).commit();
