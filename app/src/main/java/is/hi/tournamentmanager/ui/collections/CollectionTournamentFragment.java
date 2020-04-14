@@ -21,6 +21,11 @@ import is.hi.tournamentmanager.ui.tournaments.TournamentsFragment;
 public class CollectionTournamentFragment extends Fragment {
     private ViewPager2 viewPager;
     private CollectionAdapter tournamentsCollectionAdapter;
+    private String name;
+
+    public void newInstance(String name){
+        this.name = name;
+    }
 
     public View onCreateView(@NonNull LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
         return inflater.inflate(R.layout.fragment_collection, container, false);
