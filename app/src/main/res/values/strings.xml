@@ -28,5 +28,7 @@
     <string name="tournament_register_category">Category:</string>
     <string name="tournament_register">Registered users</string>
     <string name="tournament_collection">Tournament Details</string>
+    <string name="tournament_register_register">Register</string>
+    <string name="tournament_register_seed">Seed</string>
 
 </resources>

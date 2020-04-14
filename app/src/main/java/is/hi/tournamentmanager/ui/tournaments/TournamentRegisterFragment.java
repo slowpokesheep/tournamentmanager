@@ -42,8 +42,8 @@ public class TournamentRegisterFragment extends Fragment {
         }
     }
 
-    public static TournamentsFragment newInstance() {
-        TournamentsFragment newFragment = new TournamentsFragment();
+    public static TournamentRegisterFragment newInstance() {
+        TournamentRegisterFragment newFragment = new TournamentRegisterFragment();
 
         return newFragment;
     }
