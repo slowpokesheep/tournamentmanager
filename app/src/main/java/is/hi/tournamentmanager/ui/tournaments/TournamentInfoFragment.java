@@ -15,6 +15,7 @@ import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
 import androidx.appcompat.app.AppCompatActivity;
 import androidx.fragment.app.Fragment;
+import androidx.lifecycle.Observer;
 import androidx.lifecycle.ViewModelProvider;
 import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
@@ -24,16 +25,17 @@ import com.google.android.material.snackbar.Snackbar;
 import java.util.Objects;
 
 import is.hi.tournamentmanager.R;
+import is.hi.tournamentmanager.ui.dashboard.DashboardViewModel;
 import is.hi.tournamentmanager.ui.tournaments.filters.CategoryFilterDialogFragment;
 
 
 public class TournamentInfoFragment extends Fragment {
 
-    private TournamentInfoViewModel viewModel;
+    private TournamentInfoViewModel tournamentInfoViewModel;
 
     public View onCreateView(@NonNull LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState){
         Log.d("TournamentInfoFragment","onCreateView");
-        viewModel = new ViewModelProvider(this).get(TournamentInfoViewModel.class);
+        tournamentInfoViewModel = new ViewModelProvider(this).get(TournamentInfoViewModel.class);
         View root = inflater.inflate(R.layout.fragment_tournament_info, container, false);
 
         return root;
@@ -43,7 +45,7 @@ public class TournamentInfoFragment extends Fragment {
     public void onViewCreated(@NonNull View view, @Nullable Bundle savedInstaceState){
         super.onViewCreated(view, savedInstaceState);
         Log.d("info","fragment");
-        viewModel = new ViewModelProvider(requireActivity()).get(TournamentInfoViewModel.class);
+        tournamentInfoViewModel = new ViewModelProvider(requireActivity()).get(TournamentInfoViewModel.class);
         final View root = view;
 
         TextView codeLabel = root.findViewById(R.id.code_label);
@@ -64,9 +66,6 @@ public class TournamentInfoFragment extends Fragment {
         privateLabel.setText("no");
         nameLabel.setText("Keppni fyrir lúða");
         timeLabel.setText("19:30:00");
-        //observeViewModel(root);
-
-
     }
 
     @Override
@@ -83,8 +82,4 @@ public class TournamentInfoFragment extends Fragment {
         return newFragment;
     }
 
-
-    private void observeViewModel(View root) {
-        Snackbar.make(root, "asd", Snackbar.LENGTH_SHORT).show();
-    }
 }
