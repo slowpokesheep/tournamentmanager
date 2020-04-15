@@ -57,23 +57,23 @@ public class TournamentDetails extends DialogFragment {
     private void observeViewModel(String code) {
         viewModel.getTournamentDetailsDataObservable().observe(getViewLifecycleOwner(), tournamentDetailsData -> {
             if (tournamentDetailsData != null) {
-                TextView nameViewLabel = new TextView(getActivity());
-                TextView nameView = new TextView(getActivity());
-                nameViewLabel.setText("Name: ");
-                nameView.setText(tournamentDetailsData.tournament().name());
-                TextView codeViewLabel = new TextView(getActivity());
-                TextView codeView = new TextView(getActivity());
-                codeViewLabel.setText("code: ");
-                codeView.setText(code);
-                codeView.setTextColor(Color.BLACK);
+                // TextView nameViewLabel = new TextView(getActivity());
+                // TextView nameView = new TextView(getActivity());
+                // nameViewLabel.setText("Name: ");
+                // nameView.setText(tournamentDetailsData.tournament().name());
+                // TextView codeViewLabel = new TextView(getActivity());
+                // TextView codeView = new TextView(getActivity());
+                // codeViewLabel.setText("code: ");
+                // codeView.setText(code);
+                // codeView.setTextColor(Color.BLACK);
 
-                TextView[] textViews = { nameViewLabel, nameView, codeViewLabel, codeView };
-                GridLayout infoGrid = root.findViewById(R.id.tournament_details_info_grid);
-                for (TextView textView: textViews) {
-                    textView.setTextColor(Color.BLACK);
-                    textView.setTextSize(18);
-                    infoGrid.addView(textView);
-                }
+                // TextView[] textViews = { nameViewLabel, nameView, codeViewLabel, codeView };
+                // GridLayout infoGrid = root.findViewById(R.id.tournament_details_info_grid);
+                // for (TextView textView: textViews) {
+                //     textView.setTextColor(Color.BLACK);
+                //     textView.setTextSize(18);
+                //     infoGrid.addView(textView);
+                // }
 
                 // match bracket
                 int nRounds = tournamentDetailsData.tournament().nRounds();

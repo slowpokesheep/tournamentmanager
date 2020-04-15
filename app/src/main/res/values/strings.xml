@@ -16,5 +16,33 @@
     <string name="menu_dashboard">Dashboard</string>
     <string name="menu_notifications">Notifications</string>
     <string name="menu_login">Login</string>
+    <string name="menu_new_tournament">New Tournament</string>
+
+    <!--Tournament items -->
+    <string name="tournament_register_code">Code:</string>
+    <string name="tournament_register_status">Status:</string>
+    <string name="tournament_register_location">Location:</string>
+    <string name="tournament_register_name">Name:</string>
+    <string name="tournament_register_host">Host:</string>
+    <string name="tournament_register_date">Date:</string>
+    <string name="tournament_register_time">Time:</string>
+    <string name="tournament_register_private">Private:</string>
+    <string name="tournament_register_category">Category:</string>
+    <string name="tournament_register">Registered users</string>
+    <string name="tournament_collection">Tournament Details</string>
+    <string name="tournament_register_register">Register</string>
+    <string name="tournament_register_seed">Seed</string>
+    <string name="tournament_search_button">Code:</string>
+
+    <!--    New Tournament items-->
+    <string name="newtournament_instructions">Enter tournament details:</string>
+    <string name="newtournament_category">Category:</string>
+    <string name="newtournament_name">Tournament Name:</string>
+    <string name="newtournament_slots">Slots:</string>
+    <string name="newtournament_private">Make Private</string>
+    <string name="newtournament_location">Location:</string>
+    <string name="newtournament_date">Date:</string>
+    <string name="newtournament_time">Time:</string>
+    <string name="newtournament_submit">Submit</string>
 
 </resources>

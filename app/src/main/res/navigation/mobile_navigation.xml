@@ -36,6 +36,12 @@
         tools:layout="@layout/fragment_dashboard" />
 
     <fragment
+        android:id="@+id/nav_newtournament"
+        android:name="is.hi.tournamentmanager.ui.newtournament.NewTournamentFragment"
+        android:label="@string/menu_new_tournament"
+        tools:layout="@layout/fragment_newtournament" />
+
+    <fragment
         android:id="@+id/nav_notifications"
         android:name="is.hi.tournamentmanager.ui.notifications.NotificationsFragment"
         android:label="@string/menu_notifications"
@@ -46,5 +52,15 @@
         android:name="is.hi.tournamentmanager.ui.authentication.LoginFragment"
         android:label="@string/menu_login"
         tools:layout="@layout/fragment_login" />
+    <fragment
+        android:id="@+id/nav_tournament"
+        android:name="is.hi.tournamentmanager.ui.collections.CollectionTournamentFragment"
+        android:label="@string/tournament_collection"
+        tools:layout="@layout/fragment_tournament_info">
+
+        <argument
+            android:name="node"
+            />
+    </fragment>
 
 </navigation>
