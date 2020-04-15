@@ -1,5 +1,6 @@
 package is.hi.tournamentmanager.ui.tournaments;
 
+import android.graphics.Color;
 import android.os.Bundle;
 import android.text.InputType;
 import android.text.method.PasswordTransformationMethod;
@@ -22,16 +23,13 @@ import androidx.lifecycle.ViewModelProvider;
 
 import org.json.JSONException;
 import org.json.JSONObject;
-import org.w3c.dom.Text;
-
-import java.io.PrintWriter;
 
 import is.hi.tournamentmanager.R;
 
 public class TournamentDetails extends DialogFragment {
     private View root;
     private TournamentDetailsViewModel viewModel;
-    private  RelativeLayout tournamentBracketLayout;
+    private RelativeLayout tournamentBracketLayout;
     private GridLayout grid;
 
     public static TournamentDetails newInstance(String code) {
@@ -67,12 +65,15 @@ public class TournamentDetails extends DialogFragment {
                 TextView codeView = new TextView(getActivity());
                 codeViewLabel.setText("code: ");
                 codeView.setText(code);
+                codeView.setTextColor(Color.BLACK);
 
+                TextView[] textViews = { nameViewLabel, nameView, codeViewLabel, codeView };
                 GridLayout infoGrid = root.findViewById(R.id.tournament_details_info_grid);
-                infoGrid.addView(nameViewLabel);
-                infoGrid.addView(nameView);
-                infoGrid.addView(codeViewLabel);
-                infoGrid.addView(codeView);
+                for (TextView textView: textViews) {
+                    textView.setTextColor(Color.BLACK);
+                    textView.setTextSize(18);
+                    infoGrid.addView(textView);
+                }
 
                 // match bracket
                 int nRounds = tournamentDetailsData.tournament().nRounds();
@@ -88,6 +89,9 @@ public class TournamentDetails extends DialogFragment {
                 }
                 tournamentBracketLayout.addView(grid);
             }
+
+            LinearLayout layout = root.findViewById(R.id.tournament_details_linear_layout);
+            layout.setPadding(10, 10, 10, 10);
         });
 
         viewModel.fetchTournamentDetails(code);
@@ -126,8 +130,9 @@ public class TournamentDetails extends DialogFragment {
 
         // sides
         TableRow homeRow = new TableRow(getActivity());
-        homeRow.setBackgroundResource(R.drawable.border);
+        homeRow.setBackgroundColor(Color.argb(100, 255, 255, 0));
         TableRow visitorRow = new TableRow(getActivity());
+        visitorRow.setBackgroundColor(Color.argb(80, 0, 0, 255));
         TableRow.LayoutParams userParams = new TableRow.LayoutParams(
                 300,
                 TableRow.LayoutParams.WRAP_CONTENT);

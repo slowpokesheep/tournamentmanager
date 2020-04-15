@@ -13,6 +13,7 @@
         android:id="@+id/fragment_login"
         android:layout_width="match_parent"
         android:layout_height="match_parent"
+        android:padding="100dp"
         app:alignContent="flex_start"
         app:alignItems="center"
         app:flexDirection="column"
@@ -20,30 +21,36 @@
         >
 
         <EditText
-            android:id = "@+id/login_form_username"
-            android:layout_width = "wrap_content"
-            android:layout_height = "wrap_content"
+            android:id="@+id/login_form_username"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:textAlignment="center"
             />
 
         <EditText
-            android:id = "@+id/login_form_password"
-            android:layout_width = "wrap_content"
-            android:layout_height = "wrap_content"
-            android:inputType = "textPassword"
+            android:id="@+id/login_form_password"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:inputType="textPassword"
+            android:textAlignment="center"
             />
 
         <Button
-            android:id = "@+id/login_form_submit"
-            android:layout_width = "wrap_content"
-            android:layout_height = "wrap_content"
-            android:text = "Login"
+            android:id="@+id/login_form_submit"
+            android:background="@drawable/border_button"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="Login"
+            android:layout_margin="10dp"
             />
 
         <Button
-            android:id = "@+id/register_button"
-            android:layout_width = "wrap_content"
-            android:layout_height = "wrap_content"
-            android:text = "Register"
+            android:id="@+id/register_button"
+            android:background="@drawable/border_button"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="Register"
+            android:layout_margin="10dp"
             />
 
     </com.google.android.flexbox.FlexboxLayout>
