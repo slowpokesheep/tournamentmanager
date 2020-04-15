@@ -30,50 +30,39 @@
             android:divider="@drawable/empty_small_divider"
             >
 
-        <EditText
-            android:id = "@+id/login_form_username"
-            android:layout_width = "fill_parent"
-            android:layout_height = "wrap_content"
-            android:padding="10dp"
-            android:background="@color/lightgrey"
-            android:textCursorDrawable="@null"
-            android:textColor="@color/black"
-            android:hint="@string/login_form_username_hint"
-            />
+            <EditText
+                android:id="@+id/login_form_username"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:textAlignment="center"
+                />
 
-        <EditText
-            android:id = "@+id/login_form_password"
-            android:layout_width = "fill_parent"
-            android:layout_height = "wrap_content"
-            android:padding="10dp"
-            android:inputType = "textPassword"
-            android:background="@color/lightgrey"
-            android:textCursorDrawable="@null"
-            android:textColor="@color/black"
-            android:hint="@string/login_form_password_hint"
-            />
+            <EditText
+                android:id="@+id/login_form_password"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:inputType="textPassword"
+                android:textAlignment="center"
+                />
         </LinearLayout>
 
-        <LinearLayout
-            android:layout_width="fill_parent"
+        <Button
+            android:id="@+id/login_form_submit"
+            android:background="@drawable/border_button"
+            android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:layout_marginHorizontal="10dp"
-            android:layout_marginVertical="20dp">
+            android:text="Login"
+            android:layout_margin="10dp"
+            />
 
-            <Button
-                android:id = "@+id/register_button"
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                android:layout_weight="1"
-                android:text="@string/login_button_register" />
-
-            <Button
-                android:id = "@+id/login_form_submit"
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                android:layout_weight="1"
-                android:text="@string/login_button_login" />
-        </LinearLayout>
+        <Button
+            android:id="@+id/register_button"
+            android:background="@drawable/border_button"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="Register"
+            android:layout_margin="10dp"
+            />
 
     </com.google.android.flexbox.FlexboxLayout>
 
