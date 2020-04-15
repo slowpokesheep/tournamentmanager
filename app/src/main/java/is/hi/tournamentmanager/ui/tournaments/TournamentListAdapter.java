@@ -1,6 +1,7 @@
 package is.hi.tournamentmanager.ui.tournaments;
 
 import android.app.Activity;
+import android.os.Bundle;
 import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -8,8 +9,11 @@ import android.view.ViewGroup;
 import android.widget.TextView;
 
 import androidx.fragment.app.DialogFragment;
+import androidx.fragment.app.Fragment;
 import androidx.fragment.app.FragmentActivity;
 import androidx.fragment.app.FragmentManager;
+import androidx.navigation.NavController;
+import androidx.navigation.Navigation;
 import androidx.recyclerview.widget.RecyclerView;
 
 import com.apollographql.apollo.tournament.TournamentsQuery;
@@ -20,6 +24,7 @@ import java.util.List;
 
 import is.hi.tournamentmanager.MainActivity;
 import is.hi.tournamentmanager.R;
+import is.hi.tournamentmanager.ui.collections.CollectionTournamentFragment;
 import is.hi.tournamentmanager.utils.Dialogs.ErrorsDialogFragment;
 
 class TournamentListAdapter extends RecyclerView.Adapter<TournamentListAdapter.TournamentListViewHolder> {
@@ -81,11 +86,20 @@ class TournamentListAdapter extends RecyclerView.Adapter<TournamentListAdapter.T
         holder.slotsView.setText(slots);
         // click listener, go to tournament details fragment
         holder.itemView.setOnClickListener(v -> {
-            DialogFragment newFragment = TournamentDetails.newInstance(node.code());
+            final NavController navController = Navigation.findNavController(holder.itemView);
+
+            Bundle args = new Bundle();
+            args.putString("node",node.code());
+            navController.navigate(R.id.nav_tournament, args);
+            /*Fragment newFragment = new CollectionTournamentFragment();
+            fragmentManager.beginTransaction().replace(R.id.nav_host_fragment, newFragment).addToBackStack(null).commit();
+
+            //DialogFragment notFragment = TournamentInfoFragment.newInstance();
+            /*DialogFragment newFragment = TournamentDetails.newInstance(node.code());
             newFragment.show(
                      fragmentManager,
                     "Tournament Dialog"
-            );
+            );*/
         });
     }
 
