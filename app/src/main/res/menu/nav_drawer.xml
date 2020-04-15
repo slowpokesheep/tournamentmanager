@@ -32,7 +32,7 @@
             android:title="@string/menu_profile" />
         <item
             android:id="@+id/nav_newtournament"
-            android:icon="@drawable/ic_account_circle_black_24dp"
+            android:icon="@drawable/ic_add_box_black_24dp"
             android:title="@string/menu_new_tournament" />
         <item
             android:id = "@+id/nav_signout"

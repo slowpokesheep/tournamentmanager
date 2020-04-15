@@ -17,6 +17,10 @@ import androidx.navigation.Navigation;
 
 import com.apollographql.apollo.tournament.MeQuery;
 
+import java.util.Date;
+import java.text.DateFormat;
+import java.text.FieldPosition;
+import java.text.ParsePosition;
 import java.time.OffsetDateTime;
 
 import is.hi.tournamentmanager.R;
@@ -63,8 +67,12 @@ public class ProfileFragment extends Fragment {
                 nameTextView.setText(me.name());
                 String dateJoined = "";
                 try {
-                    //OffsetDateTime date = OffsetDateTime.parse(me.dateJoined().toString());
-                    //dateJoined = date.getDayOfMonth() + "/" + date.getMonthValue() + "/" + date.getYear();
+                    // Fix to support api level 25
+                    String joined = me.dateJoined().toString();
+                    System.out.println(joined);
+                    String parts[] = joined.split("T");
+                    String p[] = parts[0].split("-");
+                    dateJoined = p[0] + "/" + p[1] + "/" + p[2];
                 } catch (Exception e) {
                     Log.e("Date Joined Exception", e.toString());
                 }
