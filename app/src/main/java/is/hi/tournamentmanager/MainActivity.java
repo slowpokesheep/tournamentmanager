@@ -107,17 +107,19 @@ public class MainActivity extends AppCompatActivity {
                             title.setText(sp.getUsername());
                             subtitle.setText("The one and only!");
 
-                            // Naviagation drawer
+                            // Navigation drawer
                             image.setImageDrawable(getDrawable(R.drawable.ic_cake_black_24dp));
                             navDrawView.getMenu().setGroupVisible(R.id.nav_drawer_menu_login, true);
                             navDrawView.getMenu().setGroupVisible(R.id.nav_drawer_menu_signup, false);
 
                             // Bottom navigator
-                            navBotView.getMenu().setGroupVisible(R.id.nav_bot_menu_login, true);
-                            navBotView.getMenu().setGroupVisible(R.id.nav_bot_menu_signup, false);
+                            //navBotView.getMenu().setGroupVisible(R.id.nav_bot_menu_login, true);
+                            //navBotView.getMenu().setGroupVisible(R.id.nav_bot_menu_signup, false);
 
+                            System.out.println("------- /////  AUTHENTICAT ///////////// ---");
                             break;
                         case UNAUTHENTICATED:
+                            System.out.println("------- /////  UNAUTHENTICATED ///////////// ---");
                             title.setText(getString(R.string.nav_drawer_title));
                             subtitle.setText(getString(R.string.nav_drawer_subtitle));
 
@@ -127,10 +129,12 @@ public class MainActivity extends AppCompatActivity {
                             navDrawView.getMenu().setGroupVisible(R.id.nav_drawer_menu_signup, true);
 
                             // Bottom navigator
-                            navBotView.getMenu().setGroupVisible(R.id.nav_bot_menu_login, false);
-                            navBotView.getMenu().setGroupVisible(R.id.nav_bot_menu_signup, true);
+                            //navBotView.getMenu().setGroupVisible(R.id.nav_bot_menu_login, false);
+                            //navBotView.getMenu().setGroupVisible(R.id.nav_bot_menu_signup, true);
                             break;
                     }
+
+                    //navBotView.setSelectedItemId(R.id.nav_home);
                 });
     }
 
@@ -173,8 +177,8 @@ public class MainActivity extends AppCompatActivity {
                 navDrawView.getMenu().setGroupVisible(R.id.nav_drawer_menu_signup, true);
 
                 // Bottom navigator
-                navBotView.getMenu().setGroupVisible(R.id.nav_bot_menu_login, false);
-                navBotView.getMenu().setGroupVisible(R.id.nav_bot_menu_signup, true);
+                //navBotView.getMenu().setGroupVisible(R.id.nav_bot_menu_login, false);
+                //navBotView.getMenu().setGroupVisible(R.id.nav_bot_menu_signup, true);
             }
             // Login view, logged in
             else {
@@ -185,8 +189,8 @@ public class MainActivity extends AppCompatActivity {
                 navDrawView.getMenu().setGroupVisible(R.id.nav_drawer_menu_signup, false);
 
                 // Bottom navigator
-                navBotView.getMenu().setGroupVisible(R.id.nav_bot_menu_login, true);
-                navBotView.getMenu().setGroupVisible(R.id.nav_bot_menu_signup, false);
+                //navBotView.getMenu().setGroupVisible(R.id.nav_bot_menu_login, true);
+                //navBotView.getMenu().setGroupVisible(R.id.nav_bot_menu_signup, false);
                 sub = "The one and only!";
             }
 
