@@ -72,8 +72,8 @@ public class ProfileFragment extends Fragment {
                 nameTextView.setText("Name: " + me.name());
                 String dateJoined = "";
                 try {
-                    OffsetDateTime date = OffsetDateTime.parse(me.dateJoined().toString());
-                    dateJoined = date.getDayOfMonth() + "/" + date.getMonthValue() + "/" + date.getYear();
+                    //OffsetDateTime date = OffsetDateTime.parse(me.dateJoined().toString());
+                    //dateJoined = date.getDayOfMonth() + "/" + date.getMonthValue() + "/" + date.getYear();
                 } catch (Exception e) {
                     Log.e("Date Joined Exception", e.toString());
                 }

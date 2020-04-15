@@ -15,9 +15,11 @@ public class SharedPref {
     }
 
     public static void init(Application app) {
+        /*
         if (sharedPref != null) {
             throw new AssertionError("You already initialized me");
         }
+        */
         sharedPref = new SharedPref(app.getSharedPreferences(prefName, 0));
     }
 
