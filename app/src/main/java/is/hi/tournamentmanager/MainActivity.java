@@ -1,13 +1,19 @@
 package is.hi.tournamentmanager;
 
+import android.content.SharedPreferences;
 import android.os.Bundle;
 import android.util.Log;
+import android.view.MenuItem;
 import android.view.View;
+import android.widget.Button;
+import android.widget.ImageView;
 import android.widget.TextView;
 
 import com.google.android.material.bottomnavigation.BottomNavigationView;
 import com.google.android.material.navigation.NavigationView;
 
+import androidx.annotation.NonNull;
+import androidx.annotation.Nullable;
 import androidx.appcompat.app.AppCompatActivity;
 import androidx.appcompat.widget.Toolbar;
 import androidx.core.view.GravityCompat;
@@ -30,6 +36,11 @@ public class MainActivity extends AppCompatActivity {
     private DrawerLayout mDrawerLayout;
     private NavController navController;
 
+    private BottomNavigationView navView;
+    private NavigationView navDrawView;
+
+    private SharedPref sp;
+
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         Log.d("Main activity", "onCreate");
@@ -45,12 +56,12 @@ public class MainActivity extends AppCompatActivity {
         mDrawerLayout = findViewById(R.id.drawer_layout);
 
         // Find navigators to connect to tha nav controller
-        BottomNavigationView navView = findViewById(R.id.nav_view);
-        NavigationView navDrawView = findViewById(R.id.nav_draw_view);
+        navView = findViewById(R.id.nav_view);
+        navDrawView = findViewById(R.id.nav_draw_view);
 
         // Passing each menu ID as a set of Ids because each menu should be considered as top level destinations.
         mAppBarConfiguration = new AppBarConfiguration.Builder(R.id.nav_home, R.id.nav_tournaments, R.id.nav_collection_profile,
-                R.id.nav_profile, R.id.nav_dashboard, R.id.nav_notifications, R.id.nav_login).setDrawerLayout(mDrawerLayout).build();
+                R.id.nav_profile, R.id.nav_dashboard, R.id.nav_notifications, R.id.nav_login, R.id.nav_signout).setDrawerLayout(mDrawerLayout).build();
 
         // Init nav controller
         navController = Navigation.findNavController(this, R.id.nav_host_fragment);
@@ -61,9 +72,73 @@ public class MainActivity extends AppCompatActivity {
         // Init apollo client
         ApolloConnector.getInstance().setupApollo(getApplication(), this);
         // Init shared preferences
-        SharedPref.init(getApplication());
+        //SharedPref.init(getApplication());
+        sp = new SharedPref("MyPref", getApplication().getSharedPreferences("MyPref", 0));
         // init Api repository
         ApiRepository.getInstance().init(this);
+
+        // Listen to menu items and buttons
+        observeSharedPref();
+    }
+
+    public void observeSharedPref() {
+
+        // Iterates through all of shared preferences keys on change
+        SharedPreferences.OnSharedPreferenceChangeListener prefListener = (sharedPreferences, key) -> {
+            ImageView image = findViewById(R.id.nav_drawer_image);
+            TextView title = findViewById(R.id.nav_drawer_title);
+            TextView subtitle = findViewById(R.id.nav_drawer_subtitle);
+
+            if (key.equals("username")) {
+
+                // Lazy login check and change nav drawer title
+                title.setText(sharedPreferences.getString(key, getString(R.string.nav_drawer_title)));
+                String sub = null;
+
+                // Signup view
+                if (title.getText().equals("Tournament Manager")) {
+                    image.setImageDrawable(getDrawable(R.drawable.ic_person_black_24dp));
+                    navDrawView.getMenu().setGroupVisible(R.id.nav_drawer_menu_login, false);
+                    navDrawView.getMenu().setGroupVisible(R.id.nav_drawer_menu_signup, true);
+                }
+                // Login view
+                else {
+                    image.setImageDrawable(getDrawable(R.drawable.ic_cake_black_24dp));
+                    navDrawView.getMenu().setGroupVisible(R.id.nav_drawer_menu_login, true);
+                    navDrawView.getMenu().setGroupVisible(R.id.nav_drawer_menu_signup, false);
+                    sub = "The one and only!";
+                }
+
+                subtitle.setText(sharedPreferences.getString(sub, getString(R.string.nav_drawer_subtitle)));
+            }
+
+        };
+
+        // Register the listener to our shared preference
+        sp.getPref().registerOnSharedPreferenceChangeListener(prefListener);
+
+        //MenuItem signOut = findViewById(R.id.sign_out_button);
+        MenuItem signOut = navDrawView.getMenu().getItem(5);
+
+        signOut.setOnMenuItemClickListener(item -> {
+            Log.d("sign out button", "click");
+            //loginViewModel.refuseAuthentication();
+            SharedPref.getInstance().clearUserInfo();
+            navController.popBackStack(R.id.nav_home, false);
+            return false;
+        });
+
+        /*
+        Button signOut = (Button) navDrawView.getMenu().findItem(R.id.sign_out_button);
+
+        signOut.setOnClickListener(v -> {
+            Log.d("sign out button", "click");
+            //loginViewModel.refuseAuthentication();
+            SharedPref.getInstance().clearUserInfo();
+            navController.popBackStack(R.id.nav_home, false);
+        });
+        */
+
     }
 
     // Handle back button

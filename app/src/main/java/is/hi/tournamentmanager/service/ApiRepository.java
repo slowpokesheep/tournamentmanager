@@ -134,7 +134,7 @@ public class ApiRepository {
                     if (!response.hasErrors()) {
                         LoginMutation.TokenCreate token = response.data().tokenCreate();
                         // storing token and user id in shared preferences
-                        SharedPref.getInstance().setToken(token.token(), token.user().idInt());
+                        SharedPref.getInstance().setUserInfo(username, token.token(), token.user().idInt());
                         authenticationState.setValue(AuthenticationState.AUTHENTICATED);
                     } else {
                         authenticationState.setValue(AuthenticationState.UNAUTHENTICATED);
@@ -225,13 +225,13 @@ public class ApiRepository {
                     if (!response.hasErrors() && response.data().me() != null) {
                         meData.setValue(response.data());
                     } else {
-                        SharedPref.getInstance().clearToken();
+                        SharedPref.getInstance().clearUserInfo();
                         mainActivity.showErrorsDialog(getErrorsAsStringArray(response.errors()));
                     }
                 }
                 @Override
                 public void onFailure(@NotNull ApolloException e) {
-                    SharedPref.getInstance().clearToken();
+                    SharedPref.getInstance().clearUserInfo();
                     mainActivity.showErrorsDialog(new String[]{ e.getMessage() });
                 }
             }, uiHandler));

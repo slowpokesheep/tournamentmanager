@@ -51,7 +51,7 @@ public class ProfileFragment extends Fragment {
         signOut.setOnClickListener(v -> {
             Log.d("sign out button", "click");
             loginViewModel.refuseAuthentication();
-            SharedPref.getInstance().clearToken();
+            SharedPref.getInstance().clearUserInfo();
             navController.popBackStack(R.id.nav_home, false);
         });
 
