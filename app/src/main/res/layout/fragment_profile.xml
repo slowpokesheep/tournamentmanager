@@ -32,7 +32,7 @@
     <View
         android:layout_width="fill_parent"
         android:layout_height="1dp"
-        android:background="@android:color/tab_indicator_text"
+        android:background="@color/tab_indicator_text"
         android:layout_marginHorizontal="10dp"/>
 
     <LinearLayout
@@ -59,7 +59,7 @@
     <View
         android:layout_width="fill_parent"
         android:layout_height="1dp"
-        android:background="@android:color/tab_indicator_text"
+        android:background="@color/tab_indicator_text"
         android:layout_marginHorizontal="10dp"/>
 
     <LinearLayout
@@ -86,7 +86,7 @@
     <View
         android:layout_width="fill_parent"
         android:layout_height="1dp"
-        android:background="@android:color/tab_indicator_text"
+        android:background="@color/tab_indicator_text"
         android:layout_marginHorizontal="10dp"/>
 
     <LinearLayout
