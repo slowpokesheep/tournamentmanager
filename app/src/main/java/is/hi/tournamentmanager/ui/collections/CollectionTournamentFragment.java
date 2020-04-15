@@ -33,20 +33,10 @@ public class CollectionTournamentFragment extends Fragment {
     @Override
     public void onViewCreated(@NonNull View view, @Nullable Bundle savedInstanceState) {
         super.onViewCreated(view, savedInstanceState);
-        Bundle info = new Bundle();
-        info.putString("name", "Keppni");
-        info.putString("date", "19.04.2020");
-        info.putString("time", "19:00:00");
-        info.putString("status", "Ongoing");
-        info.putString("private", "no");
-        info.putString("category", "LoL");
-        info.putString("host", "Flóki");
-        info.putString("location", "Reykjavík");
-        info.putString("code", code);
 
         tournamentsCollectionAdapter = new CollectionAdapter(this);
-        tournamentsCollectionAdapter.add(TournamentInfoFragment.newInstance(info), "Info");
-        tournamentsCollectionAdapter.add(TournamentRegisterFragment.newInstance(), "Participants");
+        tournamentsCollectionAdapter.add(TournamentInfoFragment.newInstance(code), "Info");
+        tournamentsCollectionAdapter.add(TournamentRegisterFragment.newInstance(code), "Participants");
         tournamentsCollectionAdapter.add(TournamentBracket.newInstance(code), "Bracket");
 
         viewPager = view.findViewById(R.id.pager);

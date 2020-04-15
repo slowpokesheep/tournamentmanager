@@ -1,98 +1,55 @@
 
 package is.hi.tournamentmanager.ui.tournaments;
 
-        import android.app.Activity;
-        import android.content.Context;
-        import android.os.Bundle;
-        import android.util.Log;
-        import android.view.LayoutInflater;
-        import android.view.View;
-        import android.view.ViewGroup;
-        import android.widget.Button;
-        import android.widget.EditText;
+import android.os.Bundle;
+import android.util.Log;
+import android.view.LayoutInflater;
+import android.view.View;
+import android.view.ViewGroup;
 
-        import androidx.annotation.NonNull;
-        import androidx.appcompat.app.AppCompatActivity;
-        import androidx.fragment.app.Fragment;
-        import androidx.lifecycle.ViewModelProvider;
-        import androidx.recyclerview.widget.LinearLayoutManager;
-        import androidx.recyclerview.widget.RecyclerView;
+import androidx.annotation.NonNull;
+import androidx.fragment.app.Fragment;
+import androidx.lifecycle.ViewModelProvider;
 
-        import java.util.Objects;
+import com.apollographql.apollo.tournament.TournamentUsersQuery;
 
-        import is.hi.tournamentmanager.R;
-        import is.hi.tournamentmanager.ui.tournaments.filters.CategoryFilterDialogFragment;
+import is.hi.tournamentmanager.R;
 
 public class TournamentRegisterFragment extends Fragment {
     private TournamentRegisterViewModel tournamentRegisterViewModel;
-    private RecyclerView recyclerView;
+    private View root;
 
-    private TournamentListAdapter adapter;
-
-    private String currEndCursor = "";
-    private boolean bottom = false;
-    private boolean reset = false;
-
-    @Override
-    public void onAttach(Context context) {
-        super.onAttach(context);
-        if (context instanceof Activity) {
-            AppCompatActivity a = (AppCompatActivity) context;
-            adapter = new TournamentListAdapter(a.getSupportFragmentManager());
-        }
-    }
-
-    public static TournamentRegisterFragment newInstance() {
+    public static TournamentRegisterFragment newInstance(String code) {
         TournamentRegisterFragment newFragment = new TournamentRegisterFragment();
+        Bundle args = new Bundle();
+        args.putString("code", code);
+        newFragment.setArguments(args);
 
         return newFragment;
     }
 
     public View onCreateView(@NonNull LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
+        Bundle args = getArguments();
+        String code = args.getString("code");
+
         tournamentRegisterViewModel = new ViewModelProvider(this).get(TournamentRegisterViewModel.class);
-        View root = inflater.inflate(R.layout.fragment_tournament_register, container, false);
+        root = inflater.inflate(R.layout.fragment_tournament_register, container, false);
 
-        recyclerView = root.findViewById(R.id.registered_list);
-        LinearLayoutManager layoutManager = new LinearLayoutManager(getContext());
-        recyclerView.setLayoutManager(layoutManager);
-        recyclerView.setAdapter(adapter);
-
-        observeViewModel();
+        observeViewModel(code);
 
         return root;
     }
 
-    private void observeViewModel() {
-        tournamentRegisterViewModel.getTournamentsDataObservable().observe(getViewLifecycleOwner(), tournamentsData -> {
-            if (tournamentsData != null) {
-                if (reset) {
-                    adapter.setData(tournamentsData);
-                    reset = false;
-                } else {
-                    adapter.appendData(tournamentsData);
-                }
-                currEndCursor = tournamentsData.tournaments().pageInfo().endCursor();
-                bottom = false;
+    private void observeViewModel(String code) {
+        tournamentRegisterViewModel.getUsersObservable().observe(getViewLifecycleOwner(), usersData -> {
+            if (usersData != null) {
+                Log.d("Tournament participants", usersData.toString());
+                TournamentUsersQuery.RegisteredUsers registeredUsers = usersData.tournament().registeredUsers();
+                TournamentUsersQuery.Admins admins = usersData.tournament().admins();
+                TournamentUsersQuery.Creator host = usersData.tournament().creator();
             }
         });
 
-        // Scroll listener so we can load more tournaments when the bottom of the list is reached
-        recyclerView.addOnScrollListener(new RecyclerView.OnScrollListener() {
-            @Override
-            public void onScrollStateChanged(@NonNull RecyclerView recyclerView, int newState) {
-                super.onScrollStateChanged(recyclerView, newState);
-                if (!recyclerView.canScrollVertically(1) && !bottom) {
-                    Log.d("Scroll Listener", "bottom reached");
-                    // We load additional data until we get a null end cursor
-                    if (currEndCursor != null) {
-                        //tournamentRegisterViewModel.fetchTournaments(currEndCursor);
-                    }
-                    bottom = true;
-                }
-            }
-        });
-
-        // init
-        //tournamentRegisterViewModel.fetchTournaments(type, superCategory, search, "");
+        tournamentRegisterViewModel.fetchTournamentUsers(code);
     }
 }

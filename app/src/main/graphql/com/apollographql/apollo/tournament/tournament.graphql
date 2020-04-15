@@ -42,10 +42,33 @@ query Tournaments(
     }
   }
 
-query TournamentDetails($code: String) {
+query TournamentInfo($code: String) {
     tournament(code: $code) {
         id
         name
+        creator {
+            id
+            username
+        }
+        lastModified
+        category {
+            id
+            name
+        }
+        private
+        statusDisplay
+        userIsRegistered
+        location
+        date
+        time
+        canEdit
+        code
+    }
+}
+
+query TournamentUsers($code: String) {
+    tournament(code: $code) {
+        id
         creator {
             id
             username
@@ -58,11 +81,6 @@ query TournamentDetails($code: String) {
                 }
             }
         }
-        lastModified
-        category {
-            id
-            name
-        }
         registeredUsers {
             edges {
                 node {
@@ -71,16 +89,6 @@ query TournamentDetails($code: String) {
                 }
             }
         }
-        private
-        statusDisplay
-        matchBracket
-        nRounds
-        userIsRegistered
-        location
-        date
-        time
-        canEdit
-        code
     }
 }
 

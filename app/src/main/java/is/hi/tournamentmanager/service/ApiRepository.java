@@ -17,6 +17,8 @@ import com.apollographql.apollo.tournament.RegisterMutation;
 import com.apollographql.apollo.tournament.SeedBracketMutation;
 import com.apollographql.apollo.tournament.TournamentBracketQuery;
 import com.apollographql.apollo.tournament.TournamentDetailsQuery;
+import com.apollographql.apollo.tournament.TournamentInfoQuery;
+import com.apollographql.apollo.tournament.TournamentUsersQuery;
 import com.apollographql.apollo.tournament.TournamentsQuery;
 import com.apollographql.apollo.tournament.type.UserCreateMutationInput;
 
@@ -97,17 +99,17 @@ public class ApiRepository {
         }, uiHandler));
     }
 
-    public void getTournamentDetails(MutableLiveData<TournamentDetailsQuery.Data> tournamentDetailsData, String code) {
-        TournamentDetailsQuery.Builder builder = TournamentDetailsQuery.builder();
+    public void getTournamentInfo(MutableLiveData<TournamentInfoQuery.Data> tournamentInfoData, String code) {
+        TournamentInfoQuery.Builder builder = TournamentInfoQuery.builder();
         builder.code(code);
-        TournamentDetailsQuery query = builder.build();
+        TournamentInfoQuery query = builder.build();
 
         ApolloConnector.getInstance().getApolloClient().query(query)
-            .enqueue(new ApolloCallback<>(new ApolloCall.Callback<TournamentDetailsQuery.Data>() {
+            .enqueue(new ApolloCallback<>(new ApolloCall.Callback<TournamentInfoQuery.Data>() {
                 @Override
-                public void onResponse(@NotNull Response<TournamentDetailsQuery.Data> response) {
+                public void onResponse(@NotNull Response<TournamentInfoQuery.Data> response) {
                     if (!response.hasErrors()) {
-                        tournamentDetailsData.setValue(response.data());
+                        tournamentInfoData.setValue(response.data());
                     } else {
                         mainActivity.showErrorsDialog(getErrorsAsStringArray(response.errors()));
                     }
@@ -118,6 +120,30 @@ public class ApiRepository {
                 }
 
             }, uiHandler));
+    }
+
+    public void getTournamentUsers(MutableLiveData<TournamentUsersQuery.Data> tournamentUserData, String code) {
+        TournamentUsersQuery.Builder builder = TournamentUsersQuery.builder();
+        builder.code(code);
+        TournamentUsersQuery query = builder.build();
+
+        ApolloConnector.getInstance().getApolloClient().query(query)
+            .enqueue(new ApolloCallback<>(new ApolloCall.Callback<TournamentUsersQuery.Data>() {
+                @Override
+                public void onResponse(@NotNull Response<TournamentUsersQuery.Data> response) {
+                    if (!response.hasErrors()) {
+                        tournamentUserData.setValue(response.data());
+                    } else {
+                        mainActivity.showErrorsDialog(getErrorsAsStringArray(response.errors()));
+                    }
+                }
+                @Override
+                public void onFailure(@NotNull ApolloException e) {
+                    mainActivity.showErrorsDialog(new String[]{ e.getMessage() });
+                }
+
+            }, uiHandler));
+
     }
 
     public void getTournamentBracket(MutableLiveData<TournamentBracketQuery.Data> bracketData, String code) {

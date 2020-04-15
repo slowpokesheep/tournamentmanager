@@ -3,21 +3,21 @@ package is.hi.tournamentmanager.ui.tournaments;
 import androidx.lifecycle.MutableLiveData;
 import androidx.lifecycle.ViewModel;
 
-import com.apollographql.apollo.tournament.TournamentsQuery;
+import com.apollographql.apollo.tournament.TournamentUsersQuery;
 
 import is.hi.tournamentmanager.service.ApiRepository;
 
 public class TournamentRegisterViewModel extends ViewModel {
 
 
-    private final MutableLiveData<TournamentsQuery.Data> tournamentsDataObservable =
+    private final MutableLiveData<TournamentUsersQuery.Data> usersObservable =
             new MutableLiveData<>();
 
-    public MutableLiveData<TournamentsQuery.Data> getTournamentsDataObservable() {
-        return tournamentsDataObservable;
+    public MutableLiveData<TournamentUsersQuery.Data> getUsersObservable() {
+        return usersObservable;
     }
 
-    public void fetchTournaments(String endCursor) {
-        //ApiRepository.getInstance().getTournaments(tournamentsDataObservable, endCursor);
+    public void fetchTournamentUsers(String code) {
+        ApiRepository.getInstance().getTournamentUsers(usersObservable, code);
     }
 }
