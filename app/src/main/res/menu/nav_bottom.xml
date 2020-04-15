@@ -13,6 +13,7 @@
         android:title="@string/menu_tournaments" />
 
 
+    <!--
     <group
         android:id="@+id/nav_bot_menu_signup"
         >
@@ -31,5 +32,6 @@
             android:icon="@drawable/ic_account_circle_black_24dp"
             android:title="@string/menu_profile" />
     </group>
+    -->
 
 </menu>
