@@ -10,6 +10,7 @@ import android.widget.TextView;
 
 import com.google.android.material.bottomnavigation.BottomNavigationView;
 import com.google.android.material.navigation.NavigationView;
+import com.google.android.material.snackbar.Snackbar;
 
 import androidx.appcompat.app.AppCompatActivity;
 import androidx.appcompat.widget.Toolbar;
@@ -76,74 +77,72 @@ public class MainActivity extends AppCompatActivity {
         // Init login/signup state
         updateNav(sp.getPref(), "username");
 
-        // Listen to menu items and buttons
-        observeSharedPref();
-
         // Update login status if token is still present
         if (sp.getToken() != null) {
             sp.setLoginStatus(true);
         } else {
             sp.setLoginStatus(false);
         }
+
+        // Listen to menu items and buttons
+        observeSharedPref();
+        observeButton();
+
     }
 
     public void observeSharedPref() {
 
-        // Iterates through all of shared preferences keys on change
-        SharedPreferences.OnSharedPreferenceChangeListener prefListener = (sharedPreferences, key) -> {
+        sp.getAuthenticationState().observeForever(
+                authenticationState -> {
 
-            ImageView image = findViewById(R.id.nav_drawer_image);
-            TextView title = findViewById(R.id.nav_drawer_title);
-            TextView subtitle = findViewById(R.id.nav_drawer_subtitle);
+                    View head = navDrawView.getHeaderView(0);
 
-            if (key.equals("username")) {
+                    ImageView image = head.findViewById(R.id.nav_drawer_image);
+                    TextView title = head.findViewById(R.id.nav_drawer_title);
+                    TextView subtitle = head.findViewById(R.id.nav_drawer_subtitle);
 
-                // Lazy login check and change nav drawer title
-                title.setText(sharedPreferences.getString(key, getString(R.string.nav_drawer_title)));
-                String sub = null;
+                    switch (authenticationState) {
+                        case AUTHENTICATED:
+                            // Lazy login check and change nav drawer title
+                            title.setText(sp.getUsername());
+                            subtitle.setText("The one and only!");
 
-                // Signup view, not logged it
-                if (title.getText().equals(getString(R.string.nav_drawer_title))) {
+                            // Naviagation drawer
+                            image.setImageDrawable(getDrawable(R.drawable.ic_cake_black_24dp));
+                            navDrawView.getMenu().setGroupVisible(R.id.nav_drawer_menu_login, true);
+                            navDrawView.getMenu().setGroupVisible(R.id.nav_drawer_menu_signup, false);
 
-                    // Navigation drawer
-                    image.setImageDrawable(getDrawable(R.drawable.ic_person_black_24dp));
-                    navDrawView.getMenu().setGroupVisible(R.id.nav_drawer_menu_login, false);
-                    navDrawView.getMenu().setGroupVisible(R.id.nav_drawer_menu_signup, true);
-                    sub = getString(R.string.nav_drawer_subtitle);
+                            // Bottom navigator
+                            navBotView.getMenu().setGroupVisible(R.id.nav_bot_menu_login, true);
+                            navBotView.getMenu().setGroupVisible(R.id.nav_bot_menu_signup, false);
 
-                    // Bottom navigator
-                    navBotView.getMenu().setGroupVisible(R.id.nav_bot_menu_login, false);
-                    navBotView.getMenu().setGroupVisible(R.id.nav_bot_menu_signup, true);
-                }
-                // Login view, logged it
-                else {
+                            break;
+                        case UNAUTHENTICATED:
+                            title.setText(getString(R.string.nav_drawer_title));
+                            subtitle.setText(getString(R.string.nav_drawer_subtitle));
 
-                    // Naviagation drawer
-                    image.setImageDrawable(getDrawable(R.drawable.ic_cake_black_24dp));
-                    navDrawView.getMenu().setGroupVisible(R.id.nav_drawer_menu_login, true);
-                    navDrawView.getMenu().setGroupVisible(R.id.nav_drawer_menu_signup, false);
-                    sub = "The one and only!";
+                            // Navigation drawer
+                            image.setImageDrawable(getDrawable(R.drawable.ic_person_black_24dp));
+                            navDrawView.getMenu().setGroupVisible(R.id.nav_drawer_menu_login, false);
+                            navDrawView.getMenu().setGroupVisible(R.id.nav_drawer_menu_signup, true);
 
-                    // Bottom navigator
-                    navBotView.getMenu().setGroupVisible(R.id.nav_bot_menu_login, true);
-                    navBotView.getMenu().setGroupVisible(R.id.nav_bot_menu_signup, false);
-                }
+                            // Bottom navigator
+                            navBotView.getMenu().setGroupVisible(R.id.nav_bot_menu_login, false);
+                            navBotView.getMenu().setGroupVisible(R.id.nav_bot_menu_signup, true);
+                            break;
+                    }
+                });
+    }
 
-                subtitle.setText(sub);
-            }
-        };
-
-        // Register the listener to our shared preference
-        sp.getPref().registerOnSharedPreferenceChangeListener(prefListener);
-
+    public void observeButton() {
         // Hardcode item number
         MenuItem signOut = navDrawView.getMenu().getItem(5);
 
         // On signout button click in navigation drawer, sign out, go to home screen and close navigation drawer
         signOut.setOnMenuItemClickListener(item -> {
-            Log.d("Sign out menu Item", "click");
+            Log.d("Sign out menu item", "click");
             SharedPref.getInstance().clearUserInfo();
-            SharedPref.getInstance().setLoginStatus(false);
+            System.out.println(SharedPref.getInstance().getAuthenticationState());
             navController.popBackStack(R.id.nav_home, false);
             mDrawerLayout.closeDrawer(navDrawView);
             return true;

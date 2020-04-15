@@ -65,7 +65,6 @@ public class LoginFragment extends Fragment {
             @Override
             public void handleOnBackPressed() {
                 Log.d("LoginFragment", "back");
-                viewModel.refuseAuthentication();
                 navController.popBackStack(R.id.nav_home, false);
             }
         };
@@ -75,22 +74,23 @@ public class LoginFragment extends Fragment {
     }
 
     private void observeViewModel(View root) {
-        viewModel.getAuthenticationState().observe(getViewLifecycleOwner(),
-            authenticationState -> {
-                switch (authenticationState) {
-                    case AUTHENTICATED:
-                        Log.d("LoginFragment", "AUTHENTICATED");
-                        navController.popBackStack();
-                        break;
-                    case INVALID_AUTHENTICATION:
-                        Log.d("LoginFragment", "INVALID_AUTHENTICATION");
-                        Snackbar.make(root,
-                                "asd",
-                                Snackbar.LENGTH_SHORT
-                        ).show();
-                        break;
-                }
-            });
+
+        SharedPref.getInstance().getAuthenticationState().observe(getViewLifecycleOwner(),
+                authenticationState -> {
+                    switch (authenticationState) {
+                        case AUTHENTICATED:
+                            Log.d("LoginFragment", "AUTHENTICATED");
+                            navController.popBackStack();
+                            break;
+                        case INVALID_AUTHENTICATION:
+                            Log.d("LoginFragment", "INVALID_AUTHENTICATION");
+                            Snackbar.make(root,
+                                    "asd",
+                                    Snackbar.LENGTH_SHORT
+                            ).show();
+                            break;
+                    }
+                });
     }
 
 }
