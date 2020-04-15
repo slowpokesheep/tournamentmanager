@@ -74,6 +74,7 @@ public class TournamentsFragment extends Fragment {
 
         observeViewModel();
 
+
         EditText searchText = root.findViewById(R.id.search_text);
         Button searchButton = root.findViewById(R.id.search_button);
         searchButton.setOnClickListener(v -> {

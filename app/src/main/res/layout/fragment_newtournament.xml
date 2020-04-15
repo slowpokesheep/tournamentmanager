@@ -1,0 +1,95 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout
+    xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent">
+
+    <ScrollView
+        android:layout_height="match_parent"
+        android:layout_width="match_parent">
+
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
+            android:paddingBottom="75dp"
+            android:gravity="center"
+            android:orientation="vertical">
+
+            <TextView
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="@string/newtournament_instructions"
+                android:textSize="10pt">
+            </TextView>
+
+            <EditText
+                android:id = "@+id/newtournament_name"
+                android:hint="@string/newtournament_name"
+                android:layout_width = "fill_parent"
+                android:layout_height = "wrap_content"
+                android:layout_marginTop="5dp"
+                android:layout_marginHorizontal="5dp"/>
+
+            <Spinner
+                android:id="@+id/newtournament_category"
+                android:layout_width="fill_parent"
+                android:layout_height="wrap_content"
+                android:layout_marginTop="5dp"
+                android:layout_marginHorizontal="5dp"
+                android:spinnerMode="dropdown">
+            </Spinner>
+
+            <Spinner
+                android:id="@+id/newtournament_slots"
+                android:layout_width="fill_parent"
+                android:layout_height="wrap_content"
+                android:layout_marginTop="5dp"
+                android:layout_marginHorizontal="5dp"
+                android:spinnerMode="dropdown">
+            </Spinner>
+
+            <CheckBox
+                android:id="@+id/newtournament_private"
+                android:layout_width="fill_parent"
+                android:layout_height="wrap_content"
+                android:layout_marginTop="5dp"
+                android:layout_marginHorizontal="5dp"
+                android:text="@string/newtournament_private">
+            </CheckBox>
+
+            <EditText
+                android:id = "@+id/newtournament_location"
+                android:hint="@string/newtournament_location"
+                android:layout_width = "fill_parent"
+                android:layout_height = "wrap_content"
+                android:layout_marginTop="5dp"
+                android:layout_marginHorizontal="5dp"/>
+
+            <DatePicker
+                android:id="@+id/newtournament_date"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:datePickerMode="spinner">
+            </DatePicker>
+
+            <TimePicker
+                android:id = "@+id/newtournament_time"
+                android:layout_width="fill_parent"
+                android:layout_height="wrap_content"
+                android:timePickerMode="spinner">
+            </TimePicker>
+
+            <Button
+                android:id = "@+id/newtournament_submit"
+                android:layout_width = "wrap_content"
+                android:layout_height = "wrap_content"
+                android:text = "@string/newtournament_submit"
+                android:layout_marginTop="5dp" />
+
+
+        </LinearLayout>
+
+
+    </ScrollView>
+
+</LinearLayout>
