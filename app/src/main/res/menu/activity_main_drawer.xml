@@ -16,5 +16,9 @@
             android:id="@+id/nav_collection_profile"
             android:icon="@drawable/ic_account_circle_black_24dp"
             android:title="@string/menu_profile" />
+        <item
+            android:id="@+id/nav_newtournament"
+            android:icon="@drawable/ic_account_circle_black_24dp"
+            android:title="@string/menu_new_tournament" />
     </group>
 </menu>
