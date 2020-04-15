@@ -67,9 +67,9 @@ public class ProfileFragment extends Fragment {
                 final TextView dateJoinedTextView = root.findViewById(R.id.text_profile_date_joined);
 
                 MeQuery.Me me = meData.me();
-                usernameTextView.setText("Username: " + me.username());
-                emailTextView.setText("Email: " + me.email());
-                nameTextView.setText("Name: " + me.name());
+                usernameTextView.setText(me.username());
+                emailTextView.setText(me.email());
+                nameTextView.setText(me.name());
                 String dateJoined = "";
                 try {
                     OffsetDateTime date = OffsetDateTime.parse(me.dateJoined().toString());
@@ -77,7 +77,7 @@ public class ProfileFragment extends Fragment {
                 } catch (Exception e) {
                     Log.e("Date Joined Exception", e.toString());
                 }
-                dateJoinedTextView.setText("Date Joined: " + dateJoined);
+                dateJoinedTextView.setText(dateJoined);
             }
         });
     }

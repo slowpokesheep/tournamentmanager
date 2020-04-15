@@ -88,6 +88,8 @@ public class NewTournamentFragment extends Fragment {
             int minute = timeInput.getMinute();
             String time = hour + ":" + minute;
 
+
+
             Log.d("Name", name);
             Log.d("Category", category);
             Log.d("Slots", slots+"");

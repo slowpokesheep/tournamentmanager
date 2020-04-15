@@ -36,13 +36,20 @@
 
     <!--    New Tournament items-->
     <string name="newtournament_instructions">Enter tournament details:</string>
-    <string name="newtournament_category">Category:</string>
-    <string name="newtournament_name">Tournament Name:</string>
-    <string name="newtournament_slots">Slots:</string>
+    <string name="newtournament_category">Category</string>
+    <string name="newtournament_name">Tournament Name</string>
+    <string name="newtournament_slots">Slots</string>
     <string name="newtournament_private">Make Private</string>
-    <string name="newtournament_location">Location:</string>
-    <string name="newtournament_date">Date:</string>
-    <string name="newtournament_time">Time:</string>
+    <string name="newtournament_location">Location</string>
+    <string name="newtournament_date">Date</string>
+    <string name="newtournament_time">Time</string>
     <string name="newtournament_submit">Submit</string>
+
+    <!-- Profile Items -->
+    <string name="profile_username">Username:</string>
+    <string name="profile_email">Email:</string>
+    <string name="profile_name">Name:</string>
+    <string name="profile_date">Date Joined:</string>
+    <string name="profile_signout">SIGN OUT</string>
 
 </resources>
