@@ -46,15 +46,6 @@ public class ProfileFragment extends Fragment {
         super.onViewCreated(view, savedInstanceState);
         NavController navController = Navigation.findNavController(getActivity(), R.id.nav_host_fragment);
 
-        Button signOut = root.findViewById(R.id.sign_out_button);
-
-        signOut.setOnClickListener(v -> {
-            Log.d("sign out button", "click");
-            loginViewModel.refuseAuthentication();
-            SharedPref.getInstance().clearToken();
-            navController.popBackStack(R.id.nav_home, false);
-        });
-
         observeViewModel();
     }
 
@@ -67,9 +58,9 @@ public class ProfileFragment extends Fragment {
                 final TextView dateJoinedTextView = root.findViewById(R.id.text_profile_date_joined);
 
                 MeQuery.Me me = meData.me();
-                usernameTextView.setText("Username: " + me.username());
-                emailTextView.setText("Email: " + me.email());
-                nameTextView.setText("Name: " + me.name());
+                usernameTextView.setText(me.username());
+                emailTextView.setText(me.email());
+                nameTextView.setText(me.name());
                 String dateJoined = "";
                 try {
                     //OffsetDateTime date = OffsetDateTime.parse(me.dateJoined().toString());
@@ -77,7 +68,7 @@ public class ProfileFragment extends Fragment {
                 } catch (Exception e) {
                     Log.e("Date Joined Exception", e.toString());
                 }
-                dateJoinedTextView.setText("Date Joined: " + dateJoined);
+                dateJoinedTextView.setText(dateJoined);
             }
         });
     }

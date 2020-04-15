@@ -3,7 +3,10 @@
     xmlns:tools="http://schemas.android.com/tools"
     tools:showIn="navigation_view">
 
-    <group android:checkableBehavior="single">
+    <group
+        android:id="@+id/nav_drawer_menu_signup"
+        android:checkableBehavior="single"
+        >
         <item
             android:id="@+id/nav_home"
             android:icon="@drawable/ic_home_black_24dp"
@@ -13,6 +16,16 @@
             android:icon="@drawable/ic_list_black_24dp"
             android:title="@string/menu_tournaments" />
         <item
+            android:id="@+id/nav_login"
+            android:icon="@drawable/ic_person_add_black_24dp"
+            android:title="@string/menu_login" />
+    </group>
+
+    <group
+        android:id="@+id/nav_drawer_menu_login"
+        android:checkableBehavior="single"
+        >
+        <item
             android:id="@+id/nav_collection_profile"
             android:icon="@drawable/ic_account_circle_black_24dp"
             android:title="@string/menu_profile" />
@@ -20,5 +33,10 @@
             android:id="@+id/nav_newtournament"
             android:icon="@drawable/ic_account_circle_black_24dp"
             android:title="@string/menu_new_tournament" />
+        <item
+            android:id = "@+id/nav_signout"
+            android:icon="@drawable/ic_input_black_24dp"
+            android:title="@string/menu_signout"
+            />
     </group>
 </menu>

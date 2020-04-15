@@ -3,24 +3,27 @@ package is.hi.tournamentmanager.utils;
 import android.app.Application;
 import android.content.SharedPreferences;
 
+import androidx.lifecycle.MutableLiveData;
+
+import is.hi.tournamentmanager.ui.authentication.LoginViewModel;
+
 // singleton utility class for storing and getting shared preferences
 public class SharedPref {
     public static SharedPref sharedPref;
-
-    private static final String prefName = "MyPref";
     private final SharedPreferences pref;
 
-    private SharedPref(SharedPreferences pref) {
-        this.pref = pref;
+    public enum AuthenticationState {
+        UNAUTHENTICATED,        // Initial state, the user needs to authenticate
+        AUTHENTICATED,          // The user has authenticated successfully
+        INVALID_AUTHENTICATION  // Authentication failed
     }
 
-    public static void init(Application app) {
-        /*
-        if (sharedPref != null) {
-            throw new AssertionError("You already initialized me");
-        }
-        */
-        sharedPref = new SharedPref(app.getSharedPreferences(prefName, 0));
+    MutableLiveData<AuthenticationState> authenticationState =
+            new MutableLiveData<>();
+
+    public SharedPref(SharedPreferences pref) {
+        this.pref = pref;
+        sharedPref = this;
     }
 
     public static SharedPref getInstance() {
@@ -28,6 +31,27 @@ public class SharedPref {
             throw new AssertionError("You have to call init first");
         }
         return sharedPref;
+    }
+
+    public SharedPreferences getPref() {
+        return pref;
+    }
+
+    public MutableLiveData<AuthenticationState> getAuthenticationState() {
+        return authenticationState;
+    }
+
+    // Used to initalize loginStatus
+    public void setLoginStatus(boolean isLoggedIn) {
+        if (isLoggedIn) {
+            authenticationState.setValue(AuthenticationState.AUTHENTICATED);
+        } else {
+            authenticationState.setValue(AuthenticationState.UNAUTHENTICATED);
+        }
+    }
+
+    public String getUsername() {
+        return pref.getString("username", null);
     }
 
     public String getToken() {
@@ -38,18 +62,24 @@ public class SharedPref {
         return pref.getInt("user_id", -1);
     }
 
-    public void setToken(String token, int userId) {
+    public void setUserInfo(String name, String token, int userId) {
         SharedPreferences.Editor editor = pref.edit();
+        editor.putString("username", name);
         editor.putString("token", token);
         editor.putInt("user_id", userId);
         editor.commit();
+
+        authenticationState.setValue(AuthenticationState.AUTHENTICATED);
     }
 
-    public void clearToken() {
+    public void clearUserInfo() {
         SharedPreferences.Editor editor = pref.edit();
+        editor.remove("username");
         editor.remove("token");
         editor.remove("user_id");
         editor.commit();
+
+        authenticationState.setValue(AuthenticationState.UNAUTHENTICATED);
     }
 
 }

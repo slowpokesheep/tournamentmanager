@@ -14,6 +14,7 @@ import androidx.navigation.NavController;
 import androidx.navigation.Navigation;
 import androidx.viewpager2.widget.ViewPager2;
 
+import com.google.android.material.snackbar.Snackbar;
 import com.google.android.material.tabs.TabLayout;
 import com.google.android.material.tabs.TabLayoutMediator;
 
@@ -21,6 +22,7 @@ import is.hi.tournamentmanager.R;
 import is.hi.tournamentmanager.ui.authentication.LoginViewModel;
 import is.hi.tournamentmanager.ui.profile.ProfileFragment;
 import is.hi.tournamentmanager.ui.tournaments.TournamentsFragment;
+import is.hi.tournamentmanager.utils.SharedPref;
 
 public class CollectionProfileFragment extends Fragment {
 
@@ -39,11 +41,9 @@ public class CollectionProfileFragment extends Fragment {
         super.onViewCreated(view, savedInstanceState);
 
         // First we check authentication
-
-        loginViewModel = new ViewModelProvider(requireActivity()).get(LoginViewModel.class);
-
         final NavController navController = Navigation.findNavController(view);
-        loginViewModel.getAuthenticationState().observe(getViewLifecycleOwner(),
+
+        SharedPref.getInstance().getAuthenticationState().observe(getViewLifecycleOwner(),
                 authenticationState -> {
                     Log.d("authentication state", authenticationState.name());
                     switch (authenticationState) {
