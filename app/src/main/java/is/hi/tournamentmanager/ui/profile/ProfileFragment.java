@@ -46,15 +46,6 @@ public class ProfileFragment extends Fragment {
         super.onViewCreated(view, savedInstanceState);
         NavController navController = Navigation.findNavController(getActivity(), R.id.nav_host_fragment);
 
-        Button signOut = root.findViewById(R.id.sign_out_button);
-
-        signOut.setOnClickListener(v -> {
-            Log.d("sign out button", "click");
-            loginViewModel.refuseAuthentication();
-            SharedPref.getInstance().clearUserInfo();
-            navController.popBackStack(R.id.nav_home, false);
-        });
-
         observeViewModel();
     }
 

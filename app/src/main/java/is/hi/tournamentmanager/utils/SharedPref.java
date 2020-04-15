@@ -6,24 +6,12 @@ import android.content.SharedPreferences;
 // singleton utility class for storing and getting shared preferences
 public class SharedPref {
     public static SharedPref sharedPref;
-
-    //private static final String prefName = "MyPref";
-    private final String prefName;
     private final SharedPreferences pref;
+    private static boolean loginStatus;
 
-    public SharedPref(String name, SharedPreferences pref) {
-        this.prefName = name;
+    public SharedPref(SharedPreferences pref) {
         this.pref = pref;
         sharedPref = this;
-    }
-
-    public static void init(Application app) {
-        /*
-        if (sharedPref != null) {
-            throw new AssertionError("You already initialized me");
-        }
-        */
-        //sharedPref = new SharedPref(app.getSharedPreferences(prefName, 0));
     }
 
     public static SharedPref getInstance() {
@@ -35,6 +23,15 @@ public class SharedPref {
 
     public SharedPreferences getPref() {
         return pref;
+    }
+
+    // Used to initalize loginStatus
+    public void setLoginStatus(boolean status) {
+        loginStatus = status;
+    }
+
+    public boolean isLoggedIn() {
+        return loginStatus;
     }
 
     public String getUsername() {
@@ -55,6 +52,8 @@ public class SharedPref {
         editor.putString("token", token);
         editor.putInt("user_id", userId);
         editor.commit();
+
+        loginStatus = true;
     }
 
     public void clearUserInfo() {
@@ -63,6 +62,8 @@ public class SharedPref {
         editor.remove("token");
         editor.remove("user_id");
         editor.commit();
+
+        loginStatus = false;
     }
 
 }

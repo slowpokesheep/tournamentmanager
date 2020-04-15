@@ -33,13 +33,10 @@
             android:id="@+id/nav_newtournament"
             android:icon="@drawable/ic_account_circle_black_24dp"
             android:title="@string/menu_new_tournament" />
-
         <item
             android:id = "@+id/nav_signout"
-            android:layout_width = "wrap_content"
-            android:layout_height = "wrap_content"
+            android:icon="@drawable/ic_input_black_24dp"
             android:title="@string/menu_signout"
-            android:layout_marginBottom="100dp"
             />
     </group>
 </menu>

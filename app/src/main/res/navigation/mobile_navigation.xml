@@ -52,11 +52,6 @@
         android:name="is.hi.tournamentmanager.ui.authentication.LoginFragment"
         android:label="@string/menu_login"
         tools:layout="@layout/fragment_login" />
-    <fragment
-        android:id="@+id/nav_signout"
-        android:name="is.hi.tournamentmanager.ui.authentication.LoginFragment"
-        android:label="@string/menu_login"
-        tools:layout="@layout/fragment_login" />
 
     <fragment
         android:id="@+id/nav_tournament"

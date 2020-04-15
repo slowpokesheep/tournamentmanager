@@ -1,6 +1,7 @@
 <?xml version="1.0" encoding="utf-8"?>
 <menu xmlns:android="http://schemas.android.com/apk/res/android">
 
+
     <item
         android:id="@+id/nav_home"
         android:icon="@drawable/ic_home_black_24dp"
@@ -11,9 +12,24 @@
         android:icon="@drawable/ic_list_black_24dp"
         android:title="@string/menu_tournaments" />
 
-    <item
-        android:id="@+id/nav_collection_profile"
-        android:icon="@drawable/ic_account_circle_black_24dp"
-        android:title="@string/menu_profile" />
+
+    <group
+        android:id="@+id/nav_bot_menu_signup"
+        >
+        <item
+            android:id="@+id/nav_login"
+            android:icon="@drawable/ic_person_add_black_24dp"
+            android:title="@string/menu_login" />
+    </group>
+
+    <group
+        android:id="@+id/nav_bot_menu_login"
+        android:checkableBehavior="single"
+        >
+        <item
+            android:id="@+id/nav_collection_profile"
+            android:icon="@drawable/ic_account_circle_black_24dp"
+            android:title="@string/menu_profile" />
+    </group>
 
 </menu>
