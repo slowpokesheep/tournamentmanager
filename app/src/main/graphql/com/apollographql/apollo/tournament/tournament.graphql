@@ -83,3 +83,19 @@ query TournamentDetails($code: String) {
         code
     }
 }
+
+query TournamentBracket($code: String) {
+    tournament(code: $code) {
+        id
+        statusDisplay
+        matchBracket
+        nRounds
+        canEdit
+    }
+}
+
+mutation seedBracket($id: ID!) {
+    tournamentCreateInitialMatchups(input: {id: $id}) {
+        clientMutationId
+    }
+}

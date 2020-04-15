@@ -2,14 +2,11 @@ package is.hi.tournamentmanager.ui.tournaments;
 
 import android.graphics.Color;
 import android.os.Bundle;
-import android.text.InputType;
-import android.text.method.PasswordTransformationMethod;
-import android.util.Log;
 import android.view.Gravity;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
-import android.widget.EditText;
+import android.widget.Button;
 import android.widget.GridLayout;
 import android.widget.LinearLayout;
 import android.widget.RelativeLayout;
@@ -18,22 +15,25 @@ import android.widget.TableRow;
 import android.widget.TextView;
 
 import androidx.annotation.NonNull;
-import androidx.fragment.app.DialogFragment;
+import androidx.fragment.app.Fragment;
 import androidx.lifecycle.ViewModelProvider;
 
 import org.json.JSONException;
 import org.json.JSONObject;
 
-import is.hi.tournamentmanager.R;
+import java.util.Base64;
 
-public class TournamentDetails extends DialogFragment {
+import is.hi.tournamentmanager.R;
+import is.hi.tournamentmanager.service.ApiRepository;
+
+public class TournamentBracket extends Fragment {
     private View root;
-    private TournamentDetailsViewModel viewModel;
+    private TournamentBracketViewModel viewModel;
     private RelativeLayout tournamentBracketLayout;
     private GridLayout grid;
 
-    public static TournamentDetails newInstance(String code) {
-        TournamentDetails newFragment = new TournamentDetails();
+    public static TournamentBracket newInstance(String code) {
+        TournamentBracket newFragment = new TournamentBracket();
         Bundle args = new Bundle();
         args.putString("code", code);
         newFragment.setArguments(args);
@@ -45,9 +45,9 @@ public class TournamentDetails extends DialogFragment {
         Bundle args = getArguments();
         String code = args.getString("code");
 
-        viewModel = new ViewModelProvider(this).get(TournamentDetailsViewModel.class);
-        root = inflater.inflate(R.layout.fragment_tournament, container, false);
-        tournamentBracketLayout = root.findViewById(R.id.tournament_details_bracket);
+        viewModel = new ViewModelProvider(this).get(TournamentBracketViewModel.class);
+        root = inflater.inflate(R.layout.fragment_tournament_bracket, container, false);
+        tournamentBracketLayout = root.findViewById(R.id.tournament_bracket);
 
         observeViewModel(code);
 
@@ -55,46 +55,65 @@ public class TournamentDetails extends DialogFragment {
     }
 
     private void observeViewModel(String code) {
-        viewModel.getTournamentDetailsDataObservable().observe(getViewLifecycleOwner(), tournamentDetailsData -> {
-            if (tournamentDetailsData != null) {
-                // TextView nameViewLabel = new TextView(getActivity());
-                // TextView nameView = new TextView(getActivity());
-                // nameViewLabel.setText("Name: ");
-                // nameView.setText(tournamentDetailsData.tournament().name());
-                // TextView codeViewLabel = new TextView(getActivity());
-                // TextView codeView = new TextView(getActivity());
-                // codeViewLabel.setText("code: ");
-                // codeView.setText(code);
-                // codeView.setTextColor(Color.BLACK);
+        viewModel.getBracketDataObservable().observe(getViewLifecycleOwner(), bracketData -> {
+            if (bracketData != null) {
+                LinearLayout layout = root.findViewById(R.id.tournament_bracket_linear_layout);
+                layout.setPadding(10, 10, 10, 10);
+                LinearLayout seedLayout = root.findViewById(R.id.tournament_bracket_seed_layout);
 
-                // TextView[] textViews = { nameViewLabel, nameView, codeViewLabel, codeView };
-                // GridLayout infoGrid = root.findViewById(R.id.tournament_details_info_grid);
-                // for (TextView textView: textViews) {
-                //     textView.setTextColor(Color.BLACK);
-                //     textView.setTextSize(18);
-                //     infoGrid.addView(textView);
-                // }
+                String status = bracketData.tournament().statusDisplay();
+                // if the status is open we don't display the bracket since it's empty
+                if (status.toLowerCase().equals("open")) {
+                    LinearLayout.LayoutParams p = new LinearLayout.LayoutParams(
+                            LinearLayout.LayoutParams.WRAP_CONTENT,
+                            LinearLayout.LayoutParams.WRAP_CONTENT);
+                    p.bottomMargin = 25;
+                    TextView infoView = new TextView(getActivity());
+                    infoView.setText("This tournament has not been seeded yet.");
+                    infoView.setTextColor(Color.BLACK);
+                    infoView.setTextSize(16);
+                    seedLayout.addView(infoView, p);
+                    String idBase64 = bracketData.tournament().id();
+                    String id = new String(Base64.getDecoder().decode(idBase64)).split(":")[1];
+                    boolean canEdit = bracketData.tournament().canEdit();
+                    if (canEdit) {
+                        TextView tv = new TextView(getActivity());
+                        tv.setTextColor(Color.BLACK);
+                        tv.setTextSize(16);
+                        tv.setText("You are authorized to start the tournament.");
+                        Button b = new Button(getActivity());
+                        b.setPadding(25, 0, 25, 0);
+                        b.setBackgroundResource(R.drawable.border_button);
+                        b.setText("Seed the bracket");
 
-                // match bracket
-                int nRounds = tournamentDetailsData.tournament().nRounds();
-                int firstRoundMatches = (int) Math.pow(2, nRounds);
-                grid = new GridLayout(getActivity());
-                grid.setRowCount(firstRoundMatches * 2); // space between matches
-                grid.setColumnCount(nRounds + 1);
-                try {
-                    JSONObject root = new JSONObject(tournamentDetailsData.tournament().matchBracket());
-                    tournamentBracket(root, firstRoundMatches, nRounds, nRounds - 1);
-                } catch (JSONException e) {
-                    e.printStackTrace();
+                        b.setOnClickListener(v -> {
+                            ApiRepository.getInstance().seedTournamentBracket(viewModel, id, code);
+                            seedLayout.removeView(infoView);
+                            seedLayout.removeView(tv);
+                            seedLayout.removeView(b);
+                        });
+
+                        seedLayout.addView(tv, p);
+                        seedLayout.addView(b, p);
+                    }
+                } else {
+                    int nRounds = bracketData.tournament().nRounds();
+                    int firstRoundMatches = (int) Math.pow(2, nRounds);
+                    grid = new GridLayout(getActivity());
+                    grid.setRowCount(firstRoundMatches * 2); // space between matches
+                    grid.setColumnCount(nRounds + 1);
+                    try {
+                        JSONObject root = new JSONObject(bracketData.tournament().matchBracket());
+                        tournamentBracket(root, firstRoundMatches, nRounds, nRounds - 1);
+                    } catch (JSONException e) {
+                        e.printStackTrace();
+                    }
+                    tournamentBracketLayout.addView(grid);
                 }
-                tournamentBracketLayout.addView(grid);
             }
-
-            LinearLayout layout = root.findViewById(R.id.tournament_details_linear_layout);
-            layout.setPadding(10, 10, 10, 10);
         });
 
-        viewModel.fetchTournamentDetails(code);
+        viewModel.fetchTournamentBracket(code);
     }
 
     private void tournamentBracket(JSONObject root, int row, int col, int counter) throws JSONException {

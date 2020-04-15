@@ -14,10 +14,9 @@ import com.google.android.material.tabs.TabLayout;
 import com.google.android.material.tabs.TabLayoutMediator;
 
 import is.hi.tournamentmanager.R;
-import is.hi.tournamentmanager.ui.tournaments.TournamentDetails;
+import is.hi.tournamentmanager.ui.tournaments.TournamentBracket;
 import is.hi.tournamentmanager.ui.tournaments.TournamentInfoFragment;
 import is.hi.tournamentmanager.ui.tournaments.TournamentRegisterFragment;
-import is.hi.tournamentmanager.ui.tournaments.TournamentsFragment;
 
 public class CollectionTournamentFragment extends Fragment {
     private ViewPager2 viewPager;
@@ -47,8 +46,8 @@ public class CollectionTournamentFragment extends Fragment {
 
         tournamentsCollectionAdapter = new CollectionAdapter(this);
         tournamentsCollectionAdapter.add(TournamentInfoFragment.newInstance(info), "Info");
-        tournamentsCollectionAdapter.add(TournamentRegisterFragment.newInstance(), "Register List");
-        tournamentsCollectionAdapter.add(TournamentInfoFragment.newInstance(info), "Brackets");
+        tournamentsCollectionAdapter.add(TournamentRegisterFragment.newInstance(), "Participants");
+        tournamentsCollectionAdapter.add(TournamentBracket.newInstance(code), "Bracket");
 
         viewPager = view.findViewById(R.id.pager);
         viewPager.setAdapter(tournamentsCollectionAdapter);

@@ -14,6 +14,8 @@ import com.apollographql.apollo.exception.ApolloException;
 import com.apollographql.apollo.tournament.LoginMutation;
 import com.apollographql.apollo.tournament.MeQuery;
 import com.apollographql.apollo.tournament.RegisterMutation;
+import com.apollographql.apollo.tournament.SeedBracketMutation;
+import com.apollographql.apollo.tournament.TournamentBracketQuery;
 import com.apollographql.apollo.tournament.TournamentDetailsQuery;
 import com.apollographql.apollo.tournament.TournamentsQuery;
 import com.apollographql.apollo.tournament.type.UserCreateMutationInput;
@@ -25,7 +27,7 @@ import java.util.List;
 
 import is.hi.tournamentmanager.MainActivity;
 import is.hi.tournamentmanager.ui.authentication.LoginViewModel.AuthenticationState;
-import is.hi.tournamentmanager.ui.tournaments.TournamentDetails;
+import is.hi.tournamentmanager.ui.tournaments.TournamentBracketViewModel;
 import is.hi.tournamentmanager.utils.ApolloConnector;
 import is.hi.tournamentmanager.utils.SharedPref;
 
@@ -106,6 +108,52 @@ public class ApiRepository {
                 public void onResponse(@NotNull Response<TournamentDetailsQuery.Data> response) {
                     if (!response.hasErrors()) {
                         tournamentDetailsData.setValue(response.data());
+                    } else {
+                        mainActivity.showErrorsDialog(getErrorsAsStringArray(response.errors()));
+                    }
+                }
+                @Override
+                public void onFailure(@NotNull ApolloException e) {
+                    mainActivity.showErrorsDialog(new String[]{ e.getMessage() });
+                }
+
+            }, uiHandler));
+    }
+
+    public void getTournamentBracket(MutableLiveData<TournamentBracketQuery.Data> bracketData, String code) {
+        TournamentBracketQuery.Builder builder = TournamentBracketQuery.builder();
+        builder.code(code);
+        TournamentBracketQuery query = builder.build();
+
+        ApolloConnector.getInstance().getApolloClient().query(query)
+            .enqueue(new ApolloCallback<>(new ApolloCall.Callback<TournamentBracketQuery.Data>() {
+                @Override
+                public void onResponse(@NotNull Response<TournamentBracketQuery.Data> response) {
+                    if (!response.hasErrors()) {
+                        bracketData.setValue(response.data());
+                    } else {
+                        mainActivity.showErrorsDialog(getErrorsAsStringArray(response.errors()));
+                    }
+                }
+                @Override
+                public void onFailure(@NotNull ApolloException e) {
+                    mainActivity.showErrorsDialog(new String[]{ e.getMessage() });
+                }
+
+            }, uiHandler));
+    }
+
+    public void seedTournamentBracket(TournamentBracketViewModel viewModel, String id, String code) {
+        SeedBracketMutation.Builder builder = SeedBracketMutation.builder();
+        builder.id(id);
+        SeedBracketMutation mutation = builder.build();
+
+        ApolloConnector.getInstance().getApolloClient().mutate(mutation)
+            .enqueue(new ApolloCallback<>(new ApolloCall.Callback<SeedBracketMutation.Data>() {
+                @Override
+                public void onResponse(@NotNull Response<SeedBracketMutation.Data> response) {
+                    if (!response.hasErrors()) {
+                        viewModel.fetchTournamentBracket(code);
                     } else {
                         mainActivity.showErrorsDialog(getErrorsAsStringArray(response.errors()));
                     }
