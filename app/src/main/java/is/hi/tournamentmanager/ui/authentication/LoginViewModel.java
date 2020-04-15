@@ -32,6 +32,13 @@ public class LoginViewModel extends AndroidViewModel {
     }
 
     public MutableLiveData<AuthenticationState> getAuthenticationState() {
+
+        if (SharedPref.getInstance().isLoggedIn()) {
+            acceptAuthentication();
+        } else {
+            refuseAuthentication();
+        }
+
         return authenticationState;
     }
 

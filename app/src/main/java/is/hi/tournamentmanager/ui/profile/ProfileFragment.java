@@ -46,15 +46,6 @@ public class ProfileFragment extends Fragment {
         super.onViewCreated(view, savedInstanceState);
         NavController navController = Navigation.findNavController(getActivity(), R.id.nav_host_fragment);
 
-        Button signOut = root.findViewById(R.id.sign_out_button);
-
-        signOut.setOnClickListener(v -> {
-            Log.d("sign out button", "click");
-            loginViewModel.refuseAuthentication();
-            SharedPref.getInstance().clearToken();
-            navController.popBackStack(R.id.nav_home, false);
-        });
-
         observeViewModel();
     }
 
@@ -72,8 +63,8 @@ public class ProfileFragment extends Fragment {
                 nameTextView.setText(me.name());
                 String dateJoined = "";
                 try {
-                    OffsetDateTime date = OffsetDateTime.parse(me.dateJoined().toString());
-                    dateJoined = date.getDayOfMonth() + "/" + date.getMonthValue() + "/" + date.getYear();
+                    //OffsetDateTime date = OffsetDateTime.parse(me.dateJoined().toString());
+                    //dateJoined = date.getDayOfMonth() + "/" + date.getMonthValue() + "/" + date.getYear();
                 } catch (Exception e) {
                     Log.e("Date Joined Exception", e.toString());
                 }
