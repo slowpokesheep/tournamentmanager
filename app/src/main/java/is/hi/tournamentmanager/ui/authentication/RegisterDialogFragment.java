@@ -2,11 +2,14 @@ package is.hi.tournamentmanager.ui.authentication;
 
 import android.app.AlertDialog;
 import android.app.Dialog;
+import android.graphics.Color;
 import android.os.Bundle;
 import android.text.InputType;
 import android.text.method.PasswordTransformationMethod;
+import android.widget.CheckBox;
 import android.widget.EditText;
 import android.widget.LinearLayout;
+import android.widget.TextView;
 
 import androidx.fragment.app.DialogFragment;
 
@@ -33,6 +36,8 @@ public class RegisterDialogFragment extends DialogFragment {
         final EditText nameInput = new EditText(getActivity());
         final EditText passwordInput = new EditText(getActivity());
         final EditText password2Input = new EditText(getActivity());
+        final CheckBox superuser = new CheckBox(getActivity());
+
         usernameInput.setHint("Username");
         emailInput.setHint("Email");
         emailInput.setInputType(InputType.TYPE_TEXT_VARIATION_EMAIL_ADDRESS);
@@ -43,11 +48,19 @@ public class RegisterDialogFragment extends DialogFragment {
         passwordInput.setTransformationMethod(PasswordTransformationMethod.getInstance());
         password2Input.setInputType(InputType.TYPE_TEXT_VARIATION_PASSWORD);
         password2Input.setTransformationMethod(PasswordTransformationMethod.getInstance());
+        superuser.setText("Superuser*");
+        superuser.setTextColor(Color.rgb(128, 128, 128));
+        TextView superuserInfo = new TextView(getActivity());
+        superuserInfo.setText("*Superusers can modify all tournaments, this option is temporarily available for testing purposes.");
+        superuserInfo.setTextSize(12);
+
         layout.addView(usernameInput);
         layout.addView(emailInput);
         layout.addView(nameInput);
         layout.addView(passwordInput);
         layout.addView(password2Input);
+        layout.addView(superuser);
+        layout.addView(superuserInfo);
 
         return new AlertDialog.Builder(getActivity())
                 .setIcon(R.drawable.ic_perm_identity_black_24dp)
@@ -59,9 +72,10 @@ public class RegisterDialogFragment extends DialogFragment {
                                 emailInput.getText().toString(),
                                 nameInput.getText().toString(),
                                 passwordInput.getText().toString(),
-                                password2Input.getText().toString()
+                                password2Input.getText().toString(),
+                                superuser.isChecked()
                         ))
-                .setNeutralButton("Cancel", (dialog, whichButton) -> dialog.cancel())
+                .setNegativeButton("Cancel", (dialog, whichButton) -> dialog.dismiss())
                 .create();
     }
 }

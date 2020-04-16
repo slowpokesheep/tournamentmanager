@@ -17,10 +17,14 @@ import com.apollographql.apollo.tournament.LoginMutation;
 import com.apollographql.apollo.tournament.MeQuery;
 import com.apollographql.apollo.tournament.RegisterMutation;
 import com.apollographql.apollo.tournament.SeedBracketMutation;
+import com.apollographql.apollo.tournament.SubmitMatchMutation;
 import com.apollographql.apollo.tournament.TournamentBracketQuery;
-import com.apollographql.apollo.tournament.TournamentDetailsQuery;
 import com.apollographql.apollo.tournament.TournamentInfoQuery;
 import com.apollographql.apollo.tournament.TournamentSearchQuery;
+import com.apollographql.apollo.tournament.TournamentUpdateDateMutation;
+import com.apollographql.apollo.tournament.TournamentUpdateLocationMutation;
+import com.apollographql.apollo.tournament.TournamentUpdateNameMutation;
+import com.apollographql.apollo.tournament.TournamentUpdateTimeMutation;
 import com.apollographql.apollo.tournament.TournamentUsersQuery;
 import com.apollographql.apollo.tournament.TournamentsQuery;
 import com.apollographql.apollo.tournament.type.UserCreateMutationInput;
@@ -34,6 +38,7 @@ import is.hi.tournamentmanager.MainActivity;
 import is.hi.tournamentmanager.R;
 import is.hi.tournamentmanager.ui.authentication.LoginViewModel.AuthenticationState;
 import is.hi.tournamentmanager.ui.tournaments.TournamentBracketViewModel;
+import is.hi.tournamentmanager.ui.tournaments.TournamentInfoViewModel;
 import is.hi.tournamentmanager.utils.ApolloConnector;
 import is.hi.tournamentmanager.utils.SharedPref;
 
@@ -179,6 +184,102 @@ public class ApiRepository {
 
     }
 
+    public void updateTournamentName(TournamentInfoViewModel viewModel, String code, String id, String name) {
+        TournamentUpdateNameMutation.Builder builder = TournamentUpdateNameMutation.builder();
+        builder.id(id);
+        builder.name(name);
+        TournamentUpdateNameMutation mutation = builder.build();
+
+        ApolloConnector.getInstance().getApolloClient().mutate(mutation)
+                .enqueue(new ApolloCallback<>(new ApolloCall.Callback<TournamentUpdateNameMutation.Data>() {
+                    @Override
+                    public void onResponse(@NotNull Response<TournamentUpdateNameMutation.Data> response) {
+                        if (!response.hasErrors()) {
+                            viewModel.fetchTournamentInfo(code);
+                        } else {
+                            mainActivity.showErrorsDialog(getErrorsAsStringArray(response.errors()));
+                        }
+                    }
+                    @Override
+                    public void onFailure(@NotNull ApolloException e) {
+                        mainActivity.showErrorsDialog(new String[]{ e.getMessage() });
+                    }
+
+                }, uiHandler));
+    }
+
+    public void updateTournamentLocation(TournamentInfoViewModel viewModel, String code, String id, String location) {
+        TournamentUpdateLocationMutation.Builder builder = TournamentUpdateLocationMutation.builder();
+        builder.id(id);
+        builder.location(location);
+        TournamentUpdateLocationMutation mutation = builder.build();
+
+        ApolloConnector.getInstance().getApolloClient().mutate(mutation)
+                .enqueue(new ApolloCallback<>(new ApolloCall.Callback<TournamentUpdateLocationMutation.Data>() {
+                    @Override
+                    public void onResponse(@NotNull Response<TournamentUpdateLocationMutation.Data> response) {
+                        if (!response.hasErrors()) {
+                            viewModel.fetchTournamentInfo(code);
+                        } else {
+                            mainActivity.showErrorsDialog(getErrorsAsStringArray(response.errors()));
+                        }
+                    }
+                    @Override
+                    public void onFailure(@NotNull ApolloException e) {
+                        mainActivity.showErrorsDialog(new String[]{ e.getMessage() });
+                    }
+
+                }, uiHandler));
+    }
+
+    public void updateTournamentDate(TournamentInfoViewModel viewModel, String code, String id, String date) {
+        TournamentUpdateDateMutation.Builder builder = TournamentUpdateDateMutation.builder();
+        builder.id(id);
+        builder.date(date);
+        TournamentUpdateDateMutation mutation = builder.build();
+
+        ApolloConnector.getInstance().getApolloClient().mutate(mutation)
+                .enqueue(new ApolloCallback<>(new ApolloCall.Callback<TournamentUpdateDateMutation.Data>() {
+                    @Override
+                    public void onResponse(@NotNull Response<TournamentUpdateDateMutation.Data> response) {
+                        if (!response.hasErrors()) {
+                            viewModel.fetchTournamentInfo(code);
+                        } else {
+                            mainActivity.showErrorsDialog(getErrorsAsStringArray(response.errors()));
+                        }
+                    }
+                    @Override
+                    public void onFailure(@NotNull ApolloException e) {
+                        mainActivity.showErrorsDialog(new String[]{ e.getMessage() });
+                    }
+
+                }, uiHandler));
+    }
+
+    public void updateTournamentTime(TournamentInfoViewModel viewModel, String code, String id, String time) {
+        TournamentUpdateTimeMutation.Builder builder = TournamentUpdateTimeMutation.builder();
+        builder.id(id);
+        builder.time(time);
+        TournamentUpdateTimeMutation mutation = builder.build();
+
+        ApolloConnector.getInstance().getApolloClient().mutate(mutation)
+                .enqueue(new ApolloCallback<>(new ApolloCall.Callback<TournamentUpdateTimeMutation.Data>() {
+                    @Override
+                    public void onResponse(@NotNull Response<TournamentUpdateTimeMutation.Data> response) {
+                        if (!response.hasErrors()) {
+                            viewModel.fetchTournamentInfo(code);
+                        } else {
+                            mainActivity.showErrorsDialog(getErrorsAsStringArray(response.errors()));
+                        }
+                    }
+                    @Override
+                    public void onFailure(@NotNull ApolloException e) {
+                        mainActivity.showErrorsDialog(new String[]{ e.getMessage() });
+                    }
+
+                }, uiHandler));
+    }
+
     public void getTournamentBracket(MutableLiveData<TournamentBracketQuery.Data> bracketData, String code) {
         TournamentBracketQuery.Builder builder = TournamentBracketQuery.builder();
         builder.code(code);
@@ -225,6 +326,32 @@ public class ApiRepository {
             }, uiHandler));
     }
 
+    public void submitMatch(TournamentBracketViewModel viewModel, int id, String code, int home, int visitor) {
+        SubmitMatchMutation.Builder builder = SubmitMatchMutation.builder();
+        builder.id(String.valueOf(id));
+        builder.home(home);
+        builder.visitor(visitor);
+        SubmitMatchMutation mutation = builder.build();
+
+        ApolloConnector.getInstance().getApolloClient().mutate(mutation)
+                .enqueue(new ApolloCallback<>(new ApolloCall.Callback<SubmitMatchMutation.Data>() {
+                    @Override
+                    public void onResponse(@NotNull Response<SubmitMatchMutation.Data> response) {
+                        if (!response.hasErrors()) {
+                            Log.d("code", code);
+                            viewModel.fetchTournamentBracket(code);
+                        } else {
+                            mainActivity.showErrorsDialog(getErrorsAsStringArray(response.errors()));
+                        }
+                    }
+                    @Override
+                    public void onFailure(@NotNull ApolloException e) {
+                        mainActivity.showErrorsDialog(new String[]{ e.getMessage() });
+                    }
+
+                }, uiHandler));
+    }
+
     // ==== AUTHENTICATION ==== //
 
     public void login(MutableLiveData<AuthenticationState> authenticationState, String username, String password) {
@@ -257,7 +384,7 @@ public class ApiRepository {
             }, uiHandler));
     }
 
-    public void register(String username, String email, String name, String password, String password2) {
+    public void register(String username, String email, String name, String password, String password2, boolean superuser) {
         UserCreateMutationInput input = UserCreateMutationInput
                 .builder()
                 .username(username)
@@ -265,6 +392,7 @@ public class ApiRepository {
                 .name(name)
                 .password1(password)
                 .password2(password2)
+                .setAsSuperuser(superuser)
                 .build();
 
         RegisterMutation mutation = RegisterMutation

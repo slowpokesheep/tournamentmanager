@@ -1,6 +1,7 @@
 package is.hi.tournamentmanager.ui.tournaments;
 
 import android.os.Bundle;
+import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -99,12 +100,34 @@ class TournamentListAdapter extends RecyclerView.Adapter<TournamentListAdapter.T
         fromDetails = b;
     }
 
+    @Override
+    public int getItemViewType(int position) {
+        // last item
+        if (position + 1 == data.size()) {
+            return 1;
+        }
+        // first item (header)
+        if (position == 0) {
+            return 2;
+        }
+        return 0;
+    }
+
     // Create new views (invoked by the layout manager)
     @Override
     public TournamentListViewHolder onCreateViewHolder(ViewGroup parent, int viewType) {
-        // create a new view
-        View listItem = LayoutInflater.from(parent.getContext())
-                .inflate(R.layout.tournament_list_item, parent, false);
+        View listItem;
+        switch (viewType) {
+            case 1:
+                listItem = LayoutInflater.from(parent.getContext())
+                        .inflate(R.layout.tournament_list_item_last, parent, false);
+                break;
+            default:
+                listItem = LayoutInflater.from(parent.getContext())
+                        .inflate(R.layout.tournament_list_item, parent, false);
+                break;
+        }
+
         TournamentListViewHolder vh = new TournamentListViewHolder(listItem);
         return vh;
     }
@@ -117,13 +140,12 @@ class TournamentListAdapter extends RecyclerView.Adapter<TournamentListAdapter.T
         holder.nameView.setText(node.name());
         String slots = node.registeredUsers().totalCount() + "/" + node.slots();
         holder.slotsView.setText(slots);
+
         // click listener, go to tournament details fragment
         holder.itemView.setOnClickListener(v -> {
             setBottom(false);
             setFromDetails(true);
-
             final NavController navController = Navigation.findNavController(holder.itemView);
-
             Bundle args = new Bundle();
             args.putString("code", node.code());
             navController.navigate(R.id.nav_tournament, args);

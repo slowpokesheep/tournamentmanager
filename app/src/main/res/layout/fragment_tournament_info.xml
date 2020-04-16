@@ -26,6 +26,34 @@
             android:id="@+id/code_label"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
+            android:textSize="20sp"
+            android:textStyle="bold"
+            android:gravity="end"/>
+
+    </LinearLayout>
+
+    <View
+        android:layout_width="fill_parent"
+        android:layout_height="1dp"
+        android:background="@color/tab_indicator_text"
+        android:layout_marginHorizontal="10dp"/>
+
+    <LinearLayout
+        android:layout_width="fill_parent"
+        android:layout_height="wrap_content"
+        android:layout_marginHorizontal="10dp"
+        android:layout_marginVertical="20dp">
+
+        <TextView
+            android:layout_width="wrap_content"
+            android:layout_height="match_parent"
+            android:text="@string/tournament_register_status"
+            android:textSize="20sp" />
+
+        <TextView
+            android:id="@+id/status_label"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
             android:gravity="right"
             android:textSize="20sp"
             android:textStyle="bold"/>
@@ -76,13 +104,22 @@
             android:text="@string/tournament_register_name"
             android:textSize="20sp" />
 
-        <TextView
-            android:id="@+id/name_label"
+        <LinearLayout
+            android:id="@+id/tournament_info_layout_name"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:gravity="right"
-            android:textSize="20sp"
-            android:textStyle="bold"/>
+            android:layout_gravity="right"
+            android:gravity="right">
+            <TextView
+                android:id="@+id/name_label"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:singleLine="false"
+                android:paddingLeft="60dp"
+                android:gravity="right"
+                android:textSize="20sp"
+                android:textStyle="bold"/>
+        </LinearLayout>
     </LinearLayout>
 
     <View
@@ -102,14 +139,22 @@
             android:layout_height="match_parent"
             android:text="@string/tournament_register_location"
             android:textSize="20sp" />
-
-        <TextView
-            android:id="@+id/location_label"
+        <LinearLayout
+            android:id="@+id/tournament_info_layout_location"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:gravity="right"
-            android:textSize="20sp"
-            android:textStyle="bold"/>
+            android:layout_gravity="right"
+            android:gravity="right">
+            <TextView
+                android:id="@+id/location_label"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:singleLine="false"
+                android:paddingLeft="60dp"
+                android:gravity="right"
+                android:textSize="20sp"
+                android:textStyle="bold"/>
+        </LinearLayout>
     </LinearLayout>
 
     <View
@@ -119,6 +164,7 @@
         android:layout_marginHorizontal="10dp"/>
 
     <LinearLayout
+        android:id="@+id/tournament_info_layout_category"
         android:layout_width="fill_parent"
         android:layout_height="wrap_content"
         android:layout_marginHorizontal="10dp"
@@ -157,13 +203,22 @@
             android:text="@string/tournament_register_date"
             android:textSize="20sp" />
 
-        <TextView
-            android:id="@+id/date_label"
+        <LinearLayout
+            android:id="@+id/tournament_info_layout_date"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:gravity="right"
-            android:textSize="20sp"
-            android:textStyle="bold"/>
+            android:layout_gravity="right"
+            android:gravity="right">
+            <TextView
+                android:id="@+id/date_label"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:singleLine="false"
+                android:paddingLeft="60dp"
+                android:gravity="right"
+                android:textSize="20sp"
+                android:textStyle="bold"/>
+        </LinearLayout>
     </LinearLayout>
 
     <View
@@ -184,13 +239,22 @@
             android:text="@string/tournament_register_time"
             android:textSize="20sp" />
 
-        <TextView
-            android:id="@+id/tima_label"
+        <LinearLayout
+            android:id="@+id/tournament_info_layout_time"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:gravity="right"
-            android:textSize="20sp"
-            android:textStyle="bold"/>
+            android:layout_gravity="right"
+            android:gravity="right">
+            <TextView
+                android:id="@+id/tima_label"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:singleLine="false"
+                android:paddingLeft="60dp"
+                android:gravity="right"
+                android:textSize="20sp"
+                android:textStyle="bold"/>
+        </LinearLayout>
     </LinearLayout>
 
     <View
@@ -200,6 +264,7 @@
         android:layout_marginHorizontal="10dp"/>
 
     <LinearLayout
+        android:id="@+id/tournament_info_layout_private"
         android:layout_width="fill_parent"
         android:layout_height="wrap_content"
         android:layout_marginHorizontal="10dp"
@@ -219,68 +284,6 @@
             android:textSize="20sp"
             android:textStyle="bold"/>
     </LinearLayout>
-
-    <View
-        android:layout_width="fill_parent"
-        android:layout_height="1dp"
-        android:background="@color/tab_indicator_text"
-        android:layout_marginHorizontal="10dp"/>
-
-    <LinearLayout
-        android:layout_width="fill_parent"
-        android:layout_height="wrap_content"
-        android:layout_marginHorizontal="10dp"
-        android:layout_marginVertical="20dp">
-
-        <TextView
-            android:layout_width="wrap_content"
-            android:layout_height="match_parent"
-            android:text="@string/tournament_register_status"
-            android:textSize="20sp" />
-
-        <TextView
-            android:id="@+id/status_label"
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:gravity="right"
-            android:textSize="20sp"
-            android:textStyle="bold"/>
-    </LinearLayout>
-
-    <View
-        android:layout_width="fill_parent"
-        android:layout_height="1dp"
-        android:background="@color/tab_indicator_text"
-        android:layout_marginHorizontal="10dp"/>
-
-        <LinearLayout
-            android:layout_width="fill_parent"
-            android:layout_height="wrap_content"
-            android:layout_marginHorizontal="10dp"
-            android:layout_marginVertical="20dp">
-
-        <Button
-            android:id="@+id/register_button"
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:layout_weight="1"
-            android:text="@string/tournament_register_register" />
-
-        <Button
-            android:id="@+id/seed_button"
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:layout_weight="1"
-            android:text="@string/tournament_register_seed" />
-        </LinearLayout>
-
-        <!-- Fix to push the buttons up-->
-        <LinearLayout
-            android:layout_width="fill_parent"
-            android:layout_height="wrap_content"
-            android:layout_marginHorizontal="10dp"
-            android:layout_marginVertical="20dp">
-        </LinearLayout>
 
     </TableLayout>
 

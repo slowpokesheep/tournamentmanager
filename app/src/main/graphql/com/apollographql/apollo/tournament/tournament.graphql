@@ -105,6 +105,10 @@ query TournamentBracket($code: String) {
         matchBracket
         nRounds
         canEdit
+        winner {
+            id
+            username
+        }
     }
 }
 
@@ -113,3 +117,42 @@ mutation seedBracket($id: ID!) {
         clientMutationId
     }
 }
+
+mutation submitMatch($id: ID!, $home: Int!, $visitor: Int!) {
+    matchComplete(input: {id: $id, userHomePoints: $home, userVisitorPoints: $visitor}) {
+        clientMutationId
+    }
+}
+
+mutation TournamentUpdateName($id: ID!, $name: String!) {
+    tournamentUpdate(input: {id: $id, name: $name}) {
+        tournament {
+            id
+        }
+    }
+}
+
+mutation TournamentUpdateLocation($id: ID!, $location: String!) {
+    tournamentUpdate(input: {id: $id, location: $location}) {
+        tournament {
+            id
+        }
+    }
+}
+
+mutation TournamentUpdateDate($id: ID!, $date: Date!) {
+    tournamentUpdate(input: {id: $id, date: $date}) {
+        tournament {
+            id
+        }
+    }
+}
+
+mutation TournamentUpdateTime($id: ID!, $time: Time!) {
+    tournamentUpdate(input: {id: $id, time: $time}) {
+        tournament {
+            id
+        }
+    }
+}
+
