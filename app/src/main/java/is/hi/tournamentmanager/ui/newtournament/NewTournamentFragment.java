@@ -80,22 +80,22 @@ public class NewTournamentFragment extends Fragment {
             // TODO: fixa harðkóðun
             switch (category) {
                 case "Sports - Competitive Eating":
-                    catId = 1;
-                    break;
-                case "Sports - Foosball":
-                    catId = 4;
-                    break;
-                case "Sports - Table Tennis":
-                    catId = 6;
-                    break;
-                case "Gaming - CS:GO":
-                    catId = 2;
-                    break;
-                case "Gaming - DotA":
                     catId = 3;
                     break;
-                case "Gaming - LoL":
+                case "Sports - Foosball":
+                    catId = 1;
+                    break;
+                case "Sports - Table Tennis":
+                    catId = 2;
+                    break;
+                case "Gaming - CS:GO":
+                    catId = 4;
+                    break;
+                case "Gaming - DotA":
                     catId = 5;
+                    break;
+                case "Gaming - LoL":
+                    catId = 6;
                     break;
                 default:
                     catId = 1;
