@@ -1,10 +1,12 @@
 package is.hi.tournamentmanager.service;
 
+import android.os.Bundle;
 import android.os.Handler;
 import android.os.Looper;
 import android.util.Log;
 
 import androidx.lifecycle.MutableLiveData;
+import androidx.navigation.NavController;
 
 import com.apollographql.apollo.ApolloCall;
 import com.apollographql.apollo.ApolloCallback;
@@ -18,6 +20,7 @@ import com.apollographql.apollo.tournament.SeedBracketMutation;
 import com.apollographql.apollo.tournament.TournamentBracketQuery;
 import com.apollographql.apollo.tournament.TournamentDetailsQuery;
 import com.apollographql.apollo.tournament.TournamentInfoQuery;
+import com.apollographql.apollo.tournament.TournamentSearchQuery;
 import com.apollographql.apollo.tournament.TournamentUsersQuery;
 import com.apollographql.apollo.tournament.TournamentsQuery;
 import com.apollographql.apollo.tournament.type.UserCreateMutationInput;
@@ -28,6 +31,7 @@ import java.util.ArrayList;
 import java.util.List;
 
 import is.hi.tournamentmanager.MainActivity;
+import is.hi.tournamentmanager.R;
 import is.hi.tournamentmanager.ui.authentication.LoginViewModel.AuthenticationState;
 import is.hi.tournamentmanager.ui.tournaments.TournamentBracketViewModel;
 import is.hi.tournamentmanager.utils.ApolloConnector;
@@ -59,7 +63,7 @@ public class ApiRepository {
 
     // ==== TOURNAMENTS ==== //
 
-    public void getTournaments(MutableLiveData<TournamentsQuery.Data> tournamentsData, int type, int superCategory, String search, int first, String after) {
+    public void getTournaments(MutableLiveData<TournamentsQuery.Data> tournamentsData, int type, int superCategory, String search, boolean onlyOpen, int first, String after) {
         TournamentsQuery.Builder builder = TournamentsQuery.builder();
         // created tournaments
         if (type == 1) {
@@ -79,6 +83,9 @@ public class ApiRepository {
         if (search.length() > 0) {
             builder = builder.search(search);
         }
+        if (onlyOpen) {
+            builder = builder.statuses("open");
+        }
         builder = builder.first(first).after(after);
         TournamentsQuery query = builder.build();
 
@@ -97,6 +104,32 @@ public class ApiRepository {
                 mainActivity.showErrorsDialog(new String[]{ e.getMessage() });
             }
         }, uiHandler));
+    }
+
+    // validation method (checks if the code is valid/exists)
+    public void tournamentSearch(String code, NavController navController) {
+        TournamentSearchQuery.Builder builder = TournamentSearchQuery.builder();
+        builder.code(code);
+        TournamentSearchQuery query = builder.build();
+
+        ApolloConnector.getInstance().getApolloClient().query(query)
+            .enqueue(new ApolloCallback<>(new ApolloCall.Callback<TournamentSearchQuery.Data>() {
+                @Override
+                public void onResponse(@NotNull Response<TournamentSearchQuery.Data> response) {
+                    if (!response.hasErrors()) {
+                        Bundle args = new Bundle();
+                        args.putString("code", code);
+                        navController.navigate(R.id.nav_tournament, args);
+                    } else {
+                        mainActivity.showErrorsDialog(getErrorsAsStringArray(response.errors()));
+                    }
+                }
+                @Override
+                public void onFailure(@NotNull ApolloException e) {
+                    mainActivity.showErrorsDialog(new String[]{ e.getMessage() });
+                }
+
+            }, uiHandler));
     }
 
     public void getTournamentInfo(MutableLiveData<TournamentInfoQuery.Data> tournamentInfoData, String code) {

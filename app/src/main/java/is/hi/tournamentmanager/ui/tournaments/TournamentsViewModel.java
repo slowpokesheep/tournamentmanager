@@ -1,5 +1,7 @@
 package is.hi.tournamentmanager.ui.tournaments;
 
+import android.util.Log;
+
 import androidx.lifecycle.MutableLiveData;
 import androidx.lifecycle.ViewModel;
 
@@ -16,7 +18,7 @@ public class TournamentsViewModel extends ViewModel {
         return tournamentsDataObservable;
     }
 
-    public void fetchTournaments(int type, int superCategory, String search, String endCursor) {
-        ApiRepository.getInstance().getTournaments(tournamentsDataObservable, type, superCategory, search, 20, endCursor);
+    public void fetchTournaments(int type, int superCategory, String search, boolean onlyOpen, String endCursor) {
+        ApiRepository.getInstance().getTournaments(tournamentsDataObservable, type, superCategory, search, onlyOpen, 20, endCursor);
     }
 }

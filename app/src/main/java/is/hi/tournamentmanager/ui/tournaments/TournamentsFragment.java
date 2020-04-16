@@ -8,6 +8,8 @@ import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.Button;
+import android.widget.CheckBox;
+import android.widget.CompoundButton;
 import android.widget.EditText;
 
 import androidx.annotation.NonNull;
@@ -17,10 +19,7 @@ import androidx.lifecycle.ViewModelProvider;
 import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
 
-import java.util.Objects;
-
 import is.hi.tournamentmanager.R;
-import is.hi.tournamentmanager.ui.tournaments.filters.CategoryFilterDialogFragment;
 
 public class TournamentsFragment extends Fragment {
     private TournamentsViewModel tournamentsViewModel;
@@ -28,13 +27,11 @@ public class TournamentsFragment extends Fragment {
 
     private TournamentListAdapter adapter;
 
-    private String currEndCursor = "";
-    private boolean bottom = false;
     private int type = 0;
     // 1 - sports, 2 - gaming
     private int superCategory = 0;
     private String search = "";
-    private boolean reset = false;
+    private boolean onlyOpen = false;
 
     @Override
     public void onAttach(Context context) {
@@ -74,13 +71,20 @@ public class TournamentsFragment extends Fragment {
 
         observeViewModel();
 
-
+        // show only open
+        CheckBox showOpen = root.findViewById(R.id.show_open);
+        showOpen.setOnCheckedChangeListener((buttonView, isChecked) -> {
+            onlyOpen = isChecked;
+            adapter.setReset(true);
+            tournamentsViewModel.fetchTournaments(type, superCategory, search, onlyOpen, "");
+        });
+        // search
         EditText searchText = root.findViewById(R.id.search_text);
         Button searchButton = root.findViewById(R.id.search_button);
         searchButton.setOnClickListener(v -> {
-            reset = true;
+            adapter.setReset(true);
             search = searchText.getText().toString();
-            tournamentsViewModel.fetchTournaments(type, superCategory, search, "");
+            tournamentsViewModel.fetchTournaments(type, superCategory, search, onlyOpen,"");
         });
 
         return root;
@@ -89,14 +93,18 @@ public class TournamentsFragment extends Fragment {
     private void observeViewModel() {
         tournamentsViewModel.getTournamentsDataObservable().observe(getViewLifecycleOwner(), tournamentsData -> {
             if (tournamentsData != null) {
-                if (reset) {
+                if (adapter.shouldReset()) {
                     adapter.setData(tournamentsData);
-                    reset = false;
+                    adapter.setReset(false);
                 } else {
-                    adapter.appendData(tournamentsData);
+                    if (!adapter.fromDetails()) {
+                        adapter.appendData(tournamentsData);
+                    } else {
+                        adapter.setFromDetails(false);
+                    }
                 }
-                currEndCursor = tournamentsData.tournaments().pageInfo().endCursor();
-                bottom = false;
+                adapter.setCurrEndCursor(tournamentsData.tournaments().pageInfo().endCursor());
+                adapter.setBottom(false);
             }
         });
 
@@ -104,19 +112,22 @@ public class TournamentsFragment extends Fragment {
         recyclerView.addOnScrollListener(new RecyclerView.OnScrollListener() {
             @Override
             public void onScrollStateChanged(@NonNull RecyclerView recyclerView, int newState) {
-            super.onScrollStateChanged(recyclerView, newState);
-            if (!recyclerView.canScrollVertically(1) && !bottom) {
-                Log.d("Scroll Listener", "bottom reached");
-                // We load additional data until we get a null end cursor
-                if (currEndCursor != null) {
-                    tournamentsViewModel.fetchTournaments(type, superCategory, search, currEndCursor);
+                super.onScrollStateChanged(recyclerView, newState);
+                if (!recyclerView.canScrollVertically(1) && !adapter.atBottom()) {
+                    adapter.setBottom(true);
+                    Log.d("Scroll Listener", "bottom reached");
+                    // We load additional data until we get a null end cursor
+                    String cursor = adapter.getCurrEndCursor();
+                    if (cursor != null) {
+                        tournamentsViewModel.fetchTournaments(type, superCategory, search, onlyOpen, adapter.getCurrEndCursor());
+                    }
                 }
-                bottom = true;
-            }
             }
         });
 
-        // init
-        tournamentsViewModel.fetchTournaments(type, superCategory, search, "");
+        // init - we check if first if the adapter has already been initialized
+        if (adapter.currEndCursorIsEmpty()) {
+            tournamentsViewModel.fetchTournaments(type, superCategory, search, onlyOpen, "");
+        }
     }
 }

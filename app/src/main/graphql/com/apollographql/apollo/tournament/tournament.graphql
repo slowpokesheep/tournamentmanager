@@ -42,6 +42,12 @@ query Tournaments(
     }
   }
 
+query TournamentSearch($code: String) {
+    tournament(code: $code) {
+        id
+    }
+}
+
 query TournamentInfo($code: String) {
     tournament(code: $code) {
         id

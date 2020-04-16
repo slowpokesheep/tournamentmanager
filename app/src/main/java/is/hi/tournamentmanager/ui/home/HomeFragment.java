@@ -10,9 +10,14 @@ import android.widget.EditText;
 import androidx.annotation.NonNull;
 import androidx.fragment.app.DialogFragment;
 import androidx.fragment.app.Fragment;
+import androidx.navigation.NavController;
+import androidx.navigation.Navigation;
 
 import is.hi.tournamentmanager.R;
+import is.hi.tournamentmanager.service.ApiRepository;
+import is.hi.tournamentmanager.ui.collections.CollectionTournamentFragment;
 import is.hi.tournamentmanager.ui.tournaments.TournamentBracket;
+import is.hi.tournamentmanager.utils.ApolloConnector;
 
 public class HomeFragment extends Fragment {
 
@@ -22,14 +27,9 @@ public class HomeFragment extends Fragment {
         Button findTournamentButton = root.findViewById(R.id.find_tournament_button);
         findTournamentButton.setOnClickListener(v -> {
             EditText text = root.findViewById(R.id.find_tournament_text);
-            /*
-            DialogFragment newFragment = TournamentBracket.newInstance(text.getText().toString().toUpperCase());
-            newFragment.show(
-                    getParentFragmentManager(),
-                    "Tournament Dialog"
-            );
-            */
-
+            final NavController navController = Navigation.findNavController(root);
+            // navigation happens on the callback if the code is valid
+            ApiRepository.getInstance().tournamentSearch(text.getText().toString().toUpperCase(), navController);
         });
 
         return root;

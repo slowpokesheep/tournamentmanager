@@ -1,16 +1,11 @@
 package is.hi.tournamentmanager.ui.tournaments;
 
-import android.app.Activity;
 import android.os.Bundle;
-import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.TextView;
 
-import androidx.fragment.app.DialogFragment;
-import androidx.fragment.app.Fragment;
-import androidx.fragment.app.FragmentActivity;
 import androidx.fragment.app.FragmentManager;
 import androidx.navigation.NavController;
 import androidx.navigation.Navigation;
@@ -22,13 +17,15 @@ import java.util.ArrayList;
 import java.util.Collections;
 import java.util.List;
 
-import is.hi.tournamentmanager.MainActivity;
 import is.hi.tournamentmanager.R;
-import is.hi.tournamentmanager.ui.collections.CollectionTournamentFragment;
-import is.hi.tournamentmanager.utils.Dialogs.ErrorsDialogFragment;
 
 class TournamentListAdapter extends RecyclerView.Adapter<TournamentListAdapter.TournamentListViewHolder> {
     FragmentManager fragmentManager;
+
+    private String currEndCursor = "";
+    private boolean reset = false;
+    private boolean bottom = false;
+    private boolean fromDetails = false;
 
     public static class TournamentListViewHolder extends RecyclerView.ViewHolder {
         public TextView categoryView;
@@ -66,6 +63,42 @@ class TournamentListAdapter extends RecyclerView.Adapter<TournamentListAdapter.T
         return data;
     }
 
+    public String getCurrEndCursor() {
+        return currEndCursor;
+    }
+
+    public void setCurrEndCursor(String c) {
+        currEndCursor = c;
+    }
+
+    public boolean currEndCursorIsEmpty() {
+        return currEndCursor != null && currEndCursor.length() == 0;
+    }
+
+    public boolean shouldReset() {
+        return reset;
+    }
+
+    public void setReset(boolean b) {
+        reset = b;
+    }
+
+    public boolean atBottom() {
+        return bottom;
+    }
+
+    public void setBottom(boolean b) {
+        bottom = b;
+    }
+
+    public boolean fromDetails() {
+        return fromDetails;
+    }
+
+    public void setFromDetails(boolean b) {
+        fromDetails = b;
+    }
+
     // Create new views (invoked by the layout manager)
     @Override
     public TournamentListViewHolder onCreateViewHolder(ViewGroup parent, int viewType) {
@@ -86,20 +119,14 @@ class TournamentListAdapter extends RecyclerView.Adapter<TournamentListAdapter.T
         holder.slotsView.setText(slots);
         // click listener, go to tournament details fragment
         holder.itemView.setOnClickListener(v -> {
+            setBottom(false);
+            setFromDetails(true);
+
             final NavController navController = Navigation.findNavController(holder.itemView);
 
             Bundle args = new Bundle();
-            args.putString("node",node.code());
+            args.putString("code", node.code());
             navController.navigate(R.id.nav_tournament, args);
-            /*Fragment newFragment = new CollectionTournamentFragment();
-            fragmentManager.beginTransaction().replace(R.id.nav_host_fragment, newFragment).addToBackStack(null).commit();
-
-            //DialogFragment notFragment = TournamentInfoFragment.newInstance();
-            /*DialogFragment newFragment = TournamentDetails.newInstance(node.code());
-            newFragment.show(
-                     fragmentManager,
-                    "Tournament Dialog"
-            );*/
         });
     }
 
