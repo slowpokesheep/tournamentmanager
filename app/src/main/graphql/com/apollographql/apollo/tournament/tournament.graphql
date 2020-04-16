@@ -124,6 +124,19 @@ mutation submitMatch($id: ID!, $home: Int!, $visitor: Int!) {
     }
 }
 
+mutation TournamentCreate($input: TournamentCreateMutationInput!) {
+    tournamentCreate(input: $input) {
+        clientMutationId
+        errors {
+            field
+            messages
+        }
+        tournament {
+            id
+        }
+    }
+}
+
 mutation TournamentUpdateName($id: ID!, $name: String!) {
     tournamentUpdate(input: {id: $id, name: $name}) {
         tournament {

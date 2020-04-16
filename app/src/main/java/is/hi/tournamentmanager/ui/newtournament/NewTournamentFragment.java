@@ -22,12 +22,14 @@ import java.text.SimpleDateFormat;
 import java.util.Calendar;
 
 import is.hi.tournamentmanager.R;
+import is.hi.tournamentmanager.service.ApiRepository;
 
 public class NewTournamentFragment extends Fragment {
 
     private NewTournamentViewModel newTournamentViewModel;
 
-    private String[] categories = {"CS:GO", "DotA", "LoL"};
+    // TODO: fetch-a categories
+    private String[] categories = {"Sports - Competitive Eating", "Sports - Foosball", "Sports - Table Tennis", "Gaming - CS:GO", "Gaming - DotA", "Gaming - LoL"};
     private Integer[] slots = {8, 16, 32, 64, 128};
 
 
@@ -63,7 +65,9 @@ public class NewTournamentFragment extends Fragment {
         CheckBox privateInput = root.findViewById(R.id.newtournament_private);
         EditText locationInput = root.findViewById(R.id.newtournament_location);
         DatePicker dateInput = root.findViewById(R.id.newtournament_date);
+        dateInput.setMinDate(System.currentTimeMillis());
         TimePicker timeInput = root.findViewById(R.id.newtournament_time);
+
         Button submitButton = root.findViewById(R.id.newtournament_submit);
 
         submitButton.setOnClickListener(v -> {
@@ -71,32 +75,64 @@ public class NewTournamentFragment extends Fragment {
             // Get values from user
             String name = nameInput.getText().toString();
             String category = categoryInput.getSelectedItem().toString();
+            int catId;
+            String[] categories = {"Sports - Competitive Eating", "Sports - Foosball", "Sports - Table Tennis", "Gaming - CS:GO", "Gaming - DotA", "Gaming - LoL"};
+            // TODO: fixa harðkóðun
+            switch (category) {
+                case "Sports - Competitive Eating":
+                    catId = 1;
+                    break;
+                case "Sports - Foosball":
+                    catId = 4;
+                    break;
+                case "Sports - Table Tennis":
+                    catId = 6;
+                    break;
+                case "Gaming - CS:GO":
+                    catId = 2;
+                    break;
+                case "Gaming - DotA":
+                    catId = 3;
+                    break;
+                case "Gaming - LoL":
+                    catId = 5;
+                    break;
+                default:
+                    catId = 1;
+                    break;
+
+            }
+
             int slots = Integer.parseInt(slotsInput.getSelectedItem().toString());
             boolean isPrivate = privateInput.isChecked();
             String location = locationInput.getText().toString();
 
             // Formatting date input
             int day = dateInput.getDayOfMonth();
-            int month = dateInput.getMonth();
+            int month = dateInput.getMonth() + 1;
             int year = dateInput.getYear();
             Calendar calendar = Calendar.getInstance();
             calendar.set(year, month, day);
-            SimpleDateFormat sdf = new SimpleDateFormat("dd-mm-yyyy");
+            SimpleDateFormat sdf = new SimpleDateFormat("yyyy-MM-dd");
             String formattedDate = sdf.format(calendar.getTime());
 
-            int hour = timeInput.getHour();
-            int minute = timeInput.getMinute();
+            String hour = String.valueOf(timeInput.getHour());
+            String minute = String.valueOf(timeInput.getMinute());
+            if (hour.length() == 1) hour = "0" + hour;
+            if (minute.length() == 1) minute = "0" + minute;
             String time = hour + ":" + minute;
 
+            ApiRepository.getInstance().createTournament(name, String.valueOf(catId), location, formattedDate, time, isPrivate, slots);
 
 
             Log.d("Name", name);
-            Log.d("Category", category);
+            Log.d("Category", category.split("-")[1].trim());
             Log.d("Slots", slots+"");
             Log.d("Make Private", Boolean.toString(isPrivate));
             Log.d("Location", location);
             Log.d("Date", formattedDate);
             Log.d("Time", time);
+
         });
 
 

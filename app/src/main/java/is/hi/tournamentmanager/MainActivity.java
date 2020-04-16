@@ -209,6 +209,10 @@ public class MainActivity extends AppCompatActivity {
         }
     }
 
+    public void goHome() {
+        navController.navigate(R.id.nav_home);
+    }
+
     // Button top-left triggers back and navigation drawer
     @Override
     public boolean onSupportNavigateUp() {

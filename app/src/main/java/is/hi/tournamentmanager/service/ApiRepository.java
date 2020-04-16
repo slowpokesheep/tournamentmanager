@@ -19,6 +19,7 @@ import com.apollographql.apollo.tournament.RegisterMutation;
 import com.apollographql.apollo.tournament.SeedBracketMutation;
 import com.apollographql.apollo.tournament.SubmitMatchMutation;
 import com.apollographql.apollo.tournament.TournamentBracketQuery;
+import com.apollographql.apollo.tournament.TournamentCreateMutation;
 import com.apollographql.apollo.tournament.TournamentInfoQuery;
 import com.apollographql.apollo.tournament.TournamentSearchQuery;
 import com.apollographql.apollo.tournament.TournamentUpdateDateMutation;
@@ -27,6 +28,7 @@ import com.apollographql.apollo.tournament.TournamentUpdateNameMutation;
 import com.apollographql.apollo.tournament.TournamentUpdateTimeMutation;
 import com.apollographql.apollo.tournament.TournamentUsersQuery;
 import com.apollographql.apollo.tournament.TournamentsQuery;
+import com.apollographql.apollo.tournament.type.TournamentCreateMutationInput;
 import com.apollographql.apollo.tournament.type.UserCreateMutationInput;
 
 import org.jetbrains.annotations.NotNull;
@@ -182,6 +184,61 @@ public class ApiRepository {
 
             }, uiHandler));
 
+    }
+
+    public void createTournament(String name, String category, String location, String date, String time, boolean privateBool, int slots) {
+        TournamentCreateMutationInput.Builder inputBuilder = TournamentCreateMutationInput.builder();
+        inputBuilder.name(name);
+        inputBuilder.category(category);
+        inputBuilder.location(location);
+        inputBuilder.date(date);
+        inputBuilder.time(time);
+        inputBuilder.private_(privateBool);
+        inputBuilder.slots(slots);
+        TournamentCreateMutation.Builder builder = TournamentCreateMutation.builder();
+        TournamentCreateMutation mutation = builder.input(inputBuilder.build()).build();
+
+        ApolloConnector.getInstance().getApolloClient().mutate(mutation)
+                .enqueue(new ApolloCallback<>(new ApolloCall.Callback<TournamentCreateMutation.Data>() {
+                    @Override
+                    public void onResponse(@NotNull Response<TournamentCreateMutation.Data> response) {
+                        List<TournamentCreateMutation.Error> formValidationErrors = response.data().tournamentCreate().errors();
+                        if (!response.hasErrors() && formValidationErrors.size() == 0) {
+                            // success!
+                            mainActivity.goHome();
+                            mainActivity.showSimpleDialog(
+                                    "Success!",
+                                    "Thank you for creating this tournament. You can track " +
+                                            "your tournaments easily by visiting your profile."
+                            );
+                        } else {
+                            // form validation errors
+                            if (!response.hasErrors()) {
+                                ArrayList<String> formValidationMessages = new ArrayList<>();
+                                for (TournamentCreateMutation.Error e : formValidationErrors) {
+                                    // output on the format 'field: message'
+                                    String field = e.field();
+                                    field = field.substring(0, 1).toUpperCase() + field.substring(1);
+                                    for (String message: e.messages()) {
+                                        formValidationMessages.add(field + " - " + message);
+                                    }
+                                }
+                                mainActivity.showErrorsDialog(formValidationMessages.toArray(
+                                        new String[formValidationMessages.size()]
+                                ));
+                            }
+                            // internal errors
+                            else {
+                                mainActivity.showErrorsDialog(getErrorsAsStringArray(response.errors()));
+                            }
+                        }
+                    }
+                    @Override
+                    public void onFailure(@NotNull ApolloException e) {
+                        mainActivity.showErrorsDialog(new String[]{ e.getMessage() });
+                    }
+
+                }, uiHandler));
     }
 
     public void updateTournamentName(TournamentInfoViewModel viewModel, String code, String id, String name) {
